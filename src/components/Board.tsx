@@ -1,11 +1,10 @@
-import { useEffect, useRef } from "react";
 import Params from "../params";
 import Background from './Background';
-import Piece from './Piece';
+import PieceElement from './Piece';
 
 type Props = {
     map: number[]
-    hover: number
+    hover: number | null
 }
 type Piece = {
     number: number
@@ -42,7 +41,7 @@ export default function Board(props: Props) {
         let pieces = makePieces();
         for (let m = 0; m < map.length; m++) {
             for (let p = 0; p < pieces.length; p++) {
-                if (pieces[p].number == map[m]) {
+                if (pieces[p].number === map[m]) {
                     pieces[p].display = "inline";
                     let { x, y } = cellNumberToPoint(width, height, m);
                     pieces[p].x = x;
@@ -50,7 +49,7 @@ export default function Board(props: Props) {
                     let yy = ~~(m % 10);
                     if (map[m] > 0 && yy === 0) {
                         pieces[p].goal = true;
-                    } else if (map[m] < 0 && yy == 5) {
+                    } else if (map[m] < 0 && yy === 5) {
                         pieces[p].goal = true;
                     }
                 }
@@ -63,11 +62,11 @@ export default function Board(props: Props) {
     const hover_piece: Piece[] = []
 
     return (<svg width={Params.CANV_SIZE} height={Params.CANV_SIZE}  >
-        <Background x={Params.CANV_SIZE} y={Params.CANV_SIZE} w={Params.CANV_SIZE} h={Params.CANV_SIZE} />
+        <Background x={0} y={0} w={Params.CANV_SIZE} h={Params.CANV_SIZE} />
         {
             pieces.map(p => {
                 return (
-                    <Piece
+                    <PieceElement
                         key={p.number}
                         x={p.x}
                         y={p.y}
@@ -80,7 +79,7 @@ export default function Board(props: Props) {
         }
         {
             hover_piece.map(p => {
-                return (<Piece
+                return (<PieceElement
                     key={p.number}
                     x={p.x}
                     y={p.y}

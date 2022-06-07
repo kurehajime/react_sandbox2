@@ -31,7 +31,7 @@ export default function Background(props: Props) {
                     ctx_board.strokeStyle = Params.COLOR_LINE;
                     if (y === 0) {
                         ctx_board.fillStyle = Params.COLOR_PANEL_1;
-                    } else if (y == 5) {
+                    } else if (y === 5) {
                         ctx_board.fillStyle = Params.COLOR_PANEL_2;
                     } else if ((x + y) % 2 === 0) {
                         ctx_board.fillStyle = Params.COLOR_PANEL_3;
@@ -49,7 +49,6 @@ export default function Background(props: Props) {
     }
     function drawBoard2(element: SVGImageElement, canvas: HTMLCanvasElement) {
         const canvSize = Params.CANV_SIZE * 3;
-        const COLOR_WHITE = "#FFFFFF";
         let cellSize = canvSize / 6;
         let ctx_board2 = canvas.getContext("2d");
         if (ctx_board2) {
