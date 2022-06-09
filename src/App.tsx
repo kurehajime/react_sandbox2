@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import { RecoilRoot } from 'recoil';
 import Board from './components/Board';
 
 function App() {
@@ -30,13 +31,20 @@ function App() {
     setMap(shuffleBoard())
   }, [])
 
+  const mock = (cellNumber: number) => {
+    console.log(cellNumber)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <Board
-          map={map}
-          hover={null}
-        ></Board>
+        <RecoilRoot>
+          <Board
+            map={map}
+            hover={3}
+            clickCell={mock}
+          ></Board>
+        </RecoilRoot>
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>

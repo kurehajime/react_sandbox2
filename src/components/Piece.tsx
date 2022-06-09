@@ -179,7 +179,7 @@ export default function Piece(props: Props) {
                 drawPiece1(piece1.current, canvas, props.number, props.goal, img_bk);
             }
         }
-    }, [props.display, props.goal, props.x, props.y, props.number, canvas, canv_bk])
+    }, [props.display, props.goal, props.number, canvas, canv_bk])
 
     return (<g>
         <image ref={piece1} className="piece1" x={props.x} y={props.y} width="83" height="83" display={props.display} />

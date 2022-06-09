@@ -1,10 +1,14 @@
 import Params from "../params";
 import Background from './Background';
 import PieceElement from './Piece';
+import GameState from "../GameState"
+import { useRecoilState } from "recoil";
+import { useRef, useState } from "react";
 
 type Props = {
     map: number[]
     hover: number | null
+    clickCell: (cellNumber: number) => void
 }
 type Piece = {
     number: number
@@ -14,6 +18,11 @@ type Piece = {
     display: string
 }
 export default function Board(props: Props) {
+    const svg = useRef<SVGSVGElement>(null)
+    const [gameState, setGameState] = useRecoilState(GameState);
+    const [hoverX, setHoverX] = useState(0)
+    const [hoverY, setHoverY] = useState(0)
+
     const makePiece = (number: number): Piece => {
         return {
             number: number,
@@ -57,17 +66,45 @@ export default function Board(props: Props) {
         }
         return pieces;
     }
-    const mouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
 
+    const pointToCellNumber = (width: number, height: number, x: number, y: number) => {
+        let cellSize = width / 6;
+        return Math.floor(x / cellSize) * 10 + Math.floor(y / cellSize);
+    }
+
+    const mouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+        if (props.hover == null) {
+            return;
+        }
+        let plus = (Params.CANV_SIZE / 6) / 2;
+        setHoverX(e.nativeEvent.offsetX - plus)
+        setHoverY(e.nativeEvent.offsetY - plus)
+    }
+    const mouseClick = (e: React.MouseEvent<SVGSVGElement>) => {
+        if (svg.current) {
+            const cellNumber = pointToCellNumber(
+                svg.current.getBoundingClientRect().width,
+                svg.current.getBoundingClientRect().height,
+                e.nativeEvent.offsetX,
+                e.nativeEvent.offsetY
+            );
+            props.clickCell(cellNumber)
+            mouseMove(e);
+        }
     }
 
     const pieces = mapToPieces(Params.CANV_SIZE, Params.CANV_SIZE, props.map);
     const hover_piece: Piece[] = []
+    if (props.hover) {
+        const hp = makePiece(props.hover)
+        hp.display = 'inline'
+        hover_piece.push(hp)
+    }
 
-    return (<svg width={Params.CANV_SIZE} height={Params.CANV_SIZE} onMouseMove={mouseMove} >
+    return (<svg ref={svg} width={Params.CANV_SIZE} height={Params.CANV_SIZE} onMouseMove={mouseMove} onMouseDown={mouseClick} >
         <Background x={0} y={0} w={Params.CANV_SIZE} h={Params.CANV_SIZE} />
         {
-            pieces.map(p => {
+            pieces.filter(p => { return p.number !== props.hover }).map(p => {
                 return (
                     <PieceElement
                         key={p.number}
@@ -84,8 +121,8 @@ export default function Board(props: Props) {
             hover_piece.map(p => {
                 return (<PieceElement
                     key={p.number}
-                    x={p.x}
-                    y={p.y}
+                    x={hoverX}
+                    y={hoverY}
                     number={p.number}
                     goal={p.goal}
                     display={p.display}
