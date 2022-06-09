@@ -57,11 +57,14 @@ export default function Board(props: Props) {
         }
         return pieces;
     }
+    const mouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+
+    }
 
     const pieces = mapToPieces(Params.CANV_SIZE, Params.CANV_SIZE, props.map);
     const hover_piece: Piece[] = []
 
-    return (<svg width={Params.CANV_SIZE} height={Params.CANV_SIZE}  >
+    return (<svg width={Params.CANV_SIZE} height={Params.CANV_SIZE} onMouseMove={mouseMove} >
         <Background x={0} y={0} w={Params.CANV_SIZE} h={Params.CANV_SIZE} />
         {
             pieces.map(p => {
