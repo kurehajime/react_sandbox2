@@ -1,4 +1,4 @@
-let RATIO = 1;
+const RATIO = 1;
 const CANV_SIZE = 500 * RATIO;
 export default {
     LIMIT_1000DAY: 3,

@@ -15,13 +15,13 @@ export default function Background(props: Props) {
      */
     function drawBoard(element: SVGImageElement, canvas: HTMLCanvasElement) {
         const canvSize = Params.CANV_SIZE * 3;
-        let cellSize = canvSize / 6;
+        const cellSize = canvSize / 6;
         canvas.width = canvSize;
         canvas.height = canvSize;
-        let ctx_board = canvas.getContext("2d");
+        const ctx_board = canvas.getContext("2d");
         if (ctx_board) {
             ctx_board.clearRect(0, 0, canvSize, canvSize);
-            let grad = ctx_board.createLinearGradient(0, 0, canvSize, canvSize);
+            const grad = ctx_board.createLinearGradient(0, 0, canvSize, canvSize);
             grad.addColorStop(0, Params.COLOR_PANEL_6);
             grad.addColorStop(0.3, Params.COLOR_PANEL_5);
             grad.addColorStop(1, Params.COLOR_PANEL_4);
@@ -49,8 +49,8 @@ export default function Background(props: Props) {
     }
     function drawBoard2(element: SVGImageElement, canvas: HTMLCanvasElement) {
         const canvSize = Params.CANV_SIZE * 3;
-        let cellSize = canvSize / 6;
-        let ctx_board2 = canvas.getContext("2d");
+        const cellSize = canvSize / 6;
+        const ctx_board2 = canvas.getContext("2d");
         if (ctx_board2) {
             ctx_board2.clearRect(0, 0, canvSize, canvSize);
             ctx_board2.globalAlpha = 0.07;

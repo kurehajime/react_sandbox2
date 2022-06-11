@@ -33,13 +33,13 @@ export default function Piece(props: Props) {
             ctx.fill();
         };
         const drawPiece1 = (element: SVGImageElement, canvas: HTMLCanvasElement, number: number, goal: boolean, img_bk: HTMLImageElement | null = null) => {
-            let cellSize = (Params.CANV_SIZE / 6) * 3;
+            const cellSize = (Params.CANV_SIZE / 6) * 3;
             canvas.width = (Params.CANV_SIZE / 6) * 3;
             canvas.height = (Params.CANV_SIZE / 6) * 3;
-            let ctx = canvas.getContext("2d");
+            const ctx = canvas.getContext("2d");
             let color;
-            let x = 0;
-            let y = 0;
+            const x = 0;
+            const y = 0;
             // 外枠を描画
             if (number === 0) {
                 return ctx;
@@ -50,7 +50,7 @@ export default function Piece(props: Props) {
             }
             if (ctx) {
                 ctx.clearRect(x, y, canvas.width, canvas.height)
-                let grad = ctx.createLinearGradient(x, y, x + cellSize, y + cellSize);
+                const grad = ctx.createLinearGradient(x, y, x + cellSize, y + cellSize);
                 grad.addColorStop(0, "rgb(255, 255, 255)");
                 grad.addColorStop(0.4, color);
                 grad.addColorStop(1, color);
@@ -91,12 +91,12 @@ export default function Piece(props: Props) {
             element.setAttribute("href", canvas.toDataURL());
         };
         const drawPiece2 = (element: SVGImageElement, canvas: HTMLCanvasElement, number: number, goal: boolean) => {
-            let cellSize = (Params.CANV_SIZE / 6) * 3;
+            const cellSize = (Params.CANV_SIZE / 6) * 3;
             canvas.width = (Params.CANV_SIZE / 6) * 3;
             canvas.height = (Params.CANV_SIZE / 6) * 3;
-            let ctx = canvas.getContext("2d");
-            let x = 0;
-            let y = 0;
+            const ctx = canvas.getContext("2d");
+            const x = 0;
+            const y = 0;
             if (ctx) {
                 ctx.clearRect(x, y, canvas.width, canvas.height)
                 // 文字を描画。
@@ -113,11 +113,11 @@ export default function Piece(props: Props) {
                     if (Params.PIECES[number + 8][i] === 0) {
                         continue;
                     }
-                    let x_dot =
+                    const x_dot =
                         x +
                         cellSize / 4.16 +
                         (Math.floor(cellSize - (1 * cellSize) / 5) / 3) * Math.floor(i % 3.0);
-                    let y_dot =
+                    const y_dot =
                         y +
                         cellSize / 4.16 +
                         (Math.floor(cellSize - (1 * cellSize) / 5) / 3) * Math.floor(i / 3.0);
@@ -147,7 +147,7 @@ export default function Piece(props: Props) {
             element.setAttribute("href", canvas.toDataURL());
         }
         const drawBk = (img_bk: HTMLImageElement) => {
-            let ctx_bk = canv_bk.getContext("2d");
+            const ctx_bk = canv_bk.getContext("2d");
             if (ctx_bk) {
                 ctx_bk.drawImage(
                     img_bk,
@@ -164,7 +164,7 @@ export default function Piece(props: Props) {
             return canv_bk;
         };
 
-        let img_bk = new Image();
+        const img_bk = new Image();
         img_bk.src = bg;
         if (piece1.current && piece2.current) {
             drawPiece1(piece1.current, canvas, props.number, props.goal);

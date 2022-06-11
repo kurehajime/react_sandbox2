@@ -1,25 +1,16 @@
 import Params from "../params";
 import Background from './Background';
 import PieceElement from './Piece';
-import GameState from "../GameState"
-import { useRecoilState } from "recoil";
 import { useRef, useState } from "react";
+import { Piece } from "../Piece";
 
 type Props = {
     map: number[]
     hover: number | null
     clickCell: (cellNumber: number) => void
 }
-type Piece = {
-    number: number
-    x: number
-    y: number
-    goal: boolean
-    display: string
-}
 export default function Board(props: Props) {
     const svg = useRef<SVGSVGElement>(null)
-    const [gameState, setGameState] = useRecoilState(GameState);
     const [hoverX, setHoverX] = useState(0)
     const [hoverY, setHoverY] = useState(0)
 
@@ -34,28 +25,28 @@ export default function Board(props: Props) {
     }
     const makePieces = (): Piece[] => {
         const numbers = [1, 2, 3, 4, 5, 6, 7, 8, -1, -2, -3, -4, -5, -6, -7, -8];
-        let pieces = [];
+        const pieces = [];
         for (const i of numbers) {
             pieces.push(makePiece(i));
         }
         return pieces;
     }
     const cellNumberToPoint = (width: number, height: number, cellNumber: number) => {
-        let cellSize = width / 6;
-        let x = ~~(cellNumber / 10) * cellSize;
-        let y = ~~(cellNumber % 10) * cellSize;
+        const cellSize = width / 6;
+        const x = ~~(cellNumber / 10) * cellSize;
+        const y = ~~(cellNumber % 10) * cellSize;
         return { x, y };
     }
     const mapToPieces = (width: number, height: number, map: number[]): Piece[] => {
-        let pieces = makePieces();
+        const pieces = makePieces();
         for (let m = 0; m < map.length; m++) {
             for (let p = 0; p < pieces.length; p++) {
                 if (pieces[p].number === map[m]) {
                     pieces[p].display = "inline";
-                    let { x, y } = cellNumberToPoint(width, height, m);
+                    const { x, y } = cellNumberToPoint(width, height, m);
                     pieces[p].x = x;
                     pieces[p].y = y;
-                    let yy = ~~(m % 10);
+                    const yy = ~~(m % 10);
                     if (map[m] > 0 && yy === 0) {
                         pieces[p].goal = true;
                     } else if (map[m] < 0 && yy === 5) {
@@ -68,7 +59,7 @@ export default function Board(props: Props) {
     }
 
     const pointToCellNumber = (width: number, height: number, x: number, y: number) => {
-        let cellSize = width / 6;
+        const cellSize = width / 6;
         return Math.floor(x / cellSize) * 10 + Math.floor(y / cellSize);
     }
 
@@ -76,7 +67,7 @@ export default function Board(props: Props) {
         if (props.hover == null) {
             return;
         }
-        let plus = (Params.CANV_SIZE / 6) / 2;
+        const plus = (Params.CANV_SIZE / 6) / 2;
         setHoverX(e.nativeEvent.offsetX - plus)
         setHoverY(e.nativeEvent.offsetY - plus)
     }
