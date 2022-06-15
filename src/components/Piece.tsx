@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Params from "../params";
 import bg from '../bk.gif';
+import { DrawUtil } from "../DrawUtil";
 
 type Props = {
     x: number
@@ -17,21 +18,6 @@ export default function Piece(props: Props) {
     const piece2 = useRef<SVGImageElement>(null)
 
     useEffect(() => {
-        // 角丸
-        const fillRoundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
-            ctx.beginPath();
-            ctx.moveTo(x + r, y);
-            ctx.lineTo(x + w - r, y);
-            ctx.arc(x + w - r, y + r, r, Math.PI * 1.5, 0, false);
-            ctx.lineTo(x + w, y + h - r);
-            ctx.arc(x + w - r, y + h - r, r, 0, Math.PI * 0.5, false);
-            ctx.lineTo(x + r, y + h);
-            ctx.arc(x + r, y + h - r, r, Math.PI * 0.5, Math.PI, false);
-            ctx.lineTo(x, y + r);
-            ctx.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5, false);
-            ctx.closePath();
-            ctx.fill();
-        };
         const drawPiece1 = (element: SVGImageElement, canvas: HTMLCanvasElement, number: number, goal: boolean, img_bk: HTMLImageElement | null = null) => {
             const cellSize = (Params.CANV_SIZE / 6) * 3;
             canvas.width = (Params.CANV_SIZE / 6) * 3;
@@ -60,7 +46,7 @@ export default function Piece(props: Props) {
                 ctx.shadowOffsetY = 2;
                 ctx.fillStyle = grad;
                 ctx.beginPath();
-                fillRoundRect(
+                DrawUtil.fillRoundRect(
                     ctx,
                     x + cellSize / 10,
                     y + cellSize / 10,

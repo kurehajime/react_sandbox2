@@ -3,6 +3,7 @@ import Background from './Background';
 import PieceElement from './Piece';
 import { useRef, useState } from "react";
 import { Piece } from "../Piece";
+import Cover from "./Cover";
 
 type Props = {
     map: number[]
@@ -120,5 +121,13 @@ export default function Board(props: Props) {
                 />)
             })
         }
+        <Cover
+            x={0}
+            y={0}
+            w={Params.CANV_SIZE}
+            h={Params.CANV_SIZE}
+            show={false}
+            demo_inc={0}
+        ></Cover>
     </svg >)
 }
