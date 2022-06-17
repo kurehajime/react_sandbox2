@@ -4,10 +4,15 @@ import PieceElement from './Piece';
 import { useRef, useState } from "react";
 import { Piece } from "../Piece";
 import Cover from "./Cover";
+import Score from "./Score";
 
 type Props = {
     map: number[]
     hover: number | null
+    cover: boolean
+    score: boolean
+    blueScore: number
+    redScore: number
     clickCell: (cellNumber: number) => void
 }
 export default function Board(props: Props) {
@@ -121,12 +126,21 @@ export default function Board(props: Props) {
                 />)
             })
         }
+        <Score
+            x={0}
+            y={0}
+            w={Params.CANV_SIZE}
+            h={Params.CANV_SIZE}
+            redScore={props.blueScore}
+            blueScore={props.redScore}
+            show={props.score}
+        ></Score>
         <Cover
             x={0}
             y={0}
             w={Params.CANV_SIZE}
             h={Params.CANV_SIZE}
-            show={false}
+            show={props.cover}
             demo_inc={0}
         ></Cover>
     </svg >)

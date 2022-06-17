@@ -5,6 +5,8 @@ import Board from './components/Board';
 
 function App() {
   const [map, setMap] = useState<number[]>([])
+  const [cover, setCover] = useState(false)
+  const [score, setScore] = useState(false)
   const shuffleBoard = (): number[] => {
     const map: number[] = [];
     for (const num in map) {
@@ -42,20 +44,21 @@ function App() {
           <Board
             map={map}
             hover={3}
+            cover={cover}
+            score={score}
+            blueScore={2}
+            redScore={3}
             clickCell={mock}
           ></Board>
         </RecoilRoot>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <input type='checkbox' id="cover"
+          onChange={(e) => { setCover(e.target.checked) }}
+          checked={cover}
+        ></input><label htmlFor="cover">Cover</label>
+        <input type='checkbox' id="cover"
+          onChange={(e) => { setScore(e.target.checked) }}
+          checked={score}
+        ></input><label htmlFor="score">Score</label>
 
       </header>
     </div >
