@@ -19,14 +19,15 @@ export default function Cover(props: Props) {
     function drawCover(element: SVGImageElement, canvas: HTMLCanvasElement, demo_inc: number) {
         // 背景
         const ctx_cover = canvas.getContext('2d');
-        const cellSize = Params.CANV_SIZE / 6;
-        canvas.width = Params.CANV_SIZE;
-        canvas.height = Params.CANV_SIZE;
+        const canvSize = Params.CANV_SIZE * 3;
+        const cellSize = Params.CANV_SIZE / 6 * 3;
+        canvas.width = canvSize;
+        canvas.height = canvSize;
         if (ctx_cover) {
-            ctx_cover.clearRect(0, 0, Params.CANV_SIZE, Params.CANV_SIZE);
+            ctx_cover.clearRect(0, 0, canvSize, canvSize);
             ctx_cover.globalAlpha = 0.50;
             ctx_cover.fillStyle = '#000000';
-            ctx_cover.fillRect(0, 0, Params.CANV_SIZE, Params.CANV_SIZE);
+            ctx_cover.fillRect(0, 0, canvSize, canvSize);
 
             // 枠
             const x = cellSize * 2;

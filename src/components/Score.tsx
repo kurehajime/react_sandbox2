@@ -17,16 +17,17 @@ export default function Score(props: Props) {
      */
     function drawScore(element: SVGImageElement, canvas: HTMLCanvasElement) {
         // 背景
-        const cellSize = Params.CANV_SIZE / 6;
+        const canvSize = Params.CANV_SIZE * 3;
+        const cellSize = Params.CANV_SIZE / 6 * 3;
         const ctx_score = canvas.getContext('2d');
         let message = "";
         const fontsize = Math.round(cellSize * 1.5);
         const blue = Params.COLOR_BLUE2;
         const red = Params.COLOR_RED2;
-        canvas.width = Params.CANV_SIZE;
-        canvas.height = Params.CANV_SIZE;
+        canvas.width = canvSize;
+        canvas.height = canvSize;
         if (ctx_score) {
-            ctx_score.clearRect(0, 0, Params.CANV_SIZE, Params.CANV_SIZE);
+            ctx_score.clearRect(0, 0, canvSize, canvSize);
 
             ctx_score.globalAlpha = 0.4;
             ctx_score.textBaseline = 'middle';

@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { RecoilRoot } from 'recoil';
 import Board from './components/Board';
+import { Hand } from './Hand';
 
 function App() {
   const [map, setMap] = useState<number[]>([])
   const [cover, setCover] = useState(false)
   const [score, setScore] = useState(false)
+  const [hand, setHand] = useState<Hand | null>([33, 44])
   const shuffleBoard = (): number[] => {
     const map: number[] = [];
     for (const num in map) {
@@ -48,6 +50,7 @@ function App() {
             score={score}
             blueScore={2}
             redScore={3}
+            hand={hand}
             clickCell={mock}
           ></Board>
         </RecoilRoot>
@@ -59,6 +62,16 @@ function App() {
           onChange={(e) => { setScore(e.target.checked) }}
           checked={score}
         ></input><label htmlFor="score">Score</label>
+        <input type='checkbox' id="shadow"
+          onChange={(e) => {
+            if (e.target.checked) {
+              setHand([33, 44])
+            } else {
+              setHand(null)
+            }
+          }}
+          checked={hand !== null}
+        ></input><label htmlFor="shadow">Shadow</label>
 
       </header>
     </div >

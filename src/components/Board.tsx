@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import { Piece } from "../Piece";
 import Cover from "./Cover";
 import Score from "./Score";
+import Shadow from "./Shadow";
+import { Hand } from "../Hand";
 
 type Props = {
     map: number[]
@@ -13,6 +15,7 @@ type Props = {
     score: boolean
     blueScore: number
     redScore: number
+    hand: Hand | null
     clickCell: (cellNumber: number) => void
 }
 export default function Board(props: Props) {
@@ -100,6 +103,14 @@ export default function Board(props: Props) {
 
     return (<svg ref={svg} width={Params.CANV_SIZE} height={Params.CANV_SIZE} onMouseMove={mouseMove} onMouseDown={mouseClick} >
         <Background x={0} y={0} w={Params.CANV_SIZE} h={Params.CANV_SIZE} />
+        <Shadow
+            map={props.map}
+            hand={props.hand}
+            x={0}
+            y={0}
+            w={Params.CANV_SIZE}
+            h={Params.CANV_SIZE}
+        ></Shadow>
         {
             pieces.filter(p => { return p.number !== props.hover }).map(p => {
                 return (
