@@ -7,6 +7,7 @@ import Cover from "./Cover";
 import Score from "./Score";
 import Shadow from "./Shadow";
 import { Hand } from "../Hand";
+import Message from "./Message";
 
 type Props = {
     map: number[]
@@ -15,6 +16,7 @@ type Props = {
     score: boolean
     blueScore: number
     redScore: number
+    message: string
     hand: Hand | null
     clickCell: (cellNumber: number) => void
 }
@@ -146,6 +148,13 @@ export default function Board(props: Props) {
             blueScore={props.redScore}
             show={props.score}
         ></Score>
+        <Message
+            x={0}
+            y={0}
+            w={Params.CANV_SIZE}
+            h={Params.CANV_SIZE}
+            message={props.message}
+        ></Message>
         <Cover
             x={0}
             y={0}

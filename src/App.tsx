@@ -9,6 +9,7 @@ function App() {
   const [cover, setCover] = useState(false)
   const [score, setScore] = useState(false)
   const [hand, setHand] = useState<Hand | null>([33, 44])
+  const [message, setMessage] = useState('')
   const shuffleBoard = (): number[] => {
     const map: number[] = [];
     for (const num in map) {
@@ -51,6 +52,7 @@ function App() {
             blueScore={2}
             redScore={3}
             hand={hand}
+            message={message}
             clickCell={mock}
           ></Board>
         </RecoilRoot>
@@ -72,7 +74,12 @@ function App() {
           }}
           checked={hand !== null}
         ></input><label htmlFor="shadow">Shadow</label>
-
+        <label htmlFor="message">Message</label><input type='text' id="message"
+          onChange={(e) => {
+            setMessage(e.target.value)
+          }}
+          value={message}
+        ></input>
       </header>
     </div >
   );
