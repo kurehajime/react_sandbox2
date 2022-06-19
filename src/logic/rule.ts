@@ -318,4 +318,67 @@ export class Rule {
         }
         return [false, map_list];
     }
+    /** 
+    * ゴールしたか
+    */
+    static isGoaled(afterHand: number, turn: number) {
+        if (turn > 0) {
+            if (afterHand % 10 === 0) {
+                return true;
+            }
+        } else if (turn < 0) {
+            if (afterHand % 10 === 5) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    /** 
+     * 盤面をシャッフル。
+     */
+    static shuffleBoard(): Int8Array {
+        const _map = new Int8Array([
+            -1, 0, 0, 0, 0, 6, 0, 0, 0, 0, -2, -8,
+            0, 0, 7, 5, 0, 0, 0, 0, -3, 0, 0, 0,
+            0, 4, 0, 0, 0, 0, -4, 0, 0, 0, 0,
+            3, 0, 0, 0, 0, -5, -7, 0, 0, 8, 2,
+            0, 0, 0, 0, -6, 0, 0, 0, 0, 1
+        ]);
+        for (const num in _map) {
+            _map[num] = 0;
+        }
+        const arr = [1, 2, 3, 4, 5, 6, 7, 8];
+        const red_num = [0, 10, 20, 30, 40, 50, 11, 41];
+        const blue_num = [55, 45, 35, 25, 15, 5, 44, 14];
+        for (let i = arr.length - 1; i >= 0; i--) {
+            const r = Math.floor(Math.random() * (i + 1));
+            const tmp = arr[i];
+            arr[i] = arr[r];
+            arr[r] = tmp;
+        }
+        for (const num in blue_num) {
+            _map[blue_num[num]] = arr[num];
+        }
+        for (const num in red_num) {
+            _map[red_num[num]] = -1 * arr[num];
+        }
+        return _map
+    }
+    /** 
+     * 手の数を取得
+     */
+    static getNodeCount(wkMap: MapArray) {
+        let count = 0;
+        for (const panel_num in wkMap) {
+            if (wkMap[panel_num] === 0) {
+                continue;
+            }
+            const canMove = Rule.getCanMovePanelX(parseInt(panel_num), wkMap);
+            count += canMove.length;
+        }
+        return count;
+    }
+
+
 }
