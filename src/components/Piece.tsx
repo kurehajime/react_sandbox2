@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import Params from "../params";
-import bg from '../bk.gif';
+import bg from '../assets/bk.gif';
 import { DrawUtil } from "../DrawUtil";
 
 type Props = {
