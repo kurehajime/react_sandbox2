@@ -11,7 +11,13 @@ export const $turn_player = atom<number>({
 });
 export const $map = atom<Int8Array>({
   key: 'map',
-  default: new Int8Array(),
+  default: new Int8Array([
+    -1, 0, 0, 0, 0, 6, 0, 0, 0, 0, -2, -8,
+    0, 0, 7, 5, 0, 0, 0, 0, -3, 0, 0, 0,
+    0, 4, 0, 0, 0, 0, -4, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, -5, -7, 0, 0, 8, 2,
+    0, 0, 0, 0, -6, 0, 0, 0, 0, 1
+  ]),
 });
 export const $hover = atom<number | null>({
   key: 'hover',

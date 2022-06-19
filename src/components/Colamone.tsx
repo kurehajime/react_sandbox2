@@ -366,6 +366,7 @@ export default function Colamone() {
             _map[red_num[num]] = -1 * arr[num];
         }
         setMap(_map);
+        setStartMap(_map)
     }
 
     /** 
@@ -432,7 +433,7 @@ export default function Colamone() {
                 setWinner(0)
             }
         } else {
-            const [is1000day, map_list] = Rule.is1000day(map, mapList)
+            const [is1000day, map_list] = Rule.is1000day(map, Object.assign({}, mapList))
             setMapList(map_list)
             if (is1000day) {
                 setWinner(0)
@@ -796,15 +797,15 @@ export default function Colamone() {
                     <div id="canv">
                         <Board
                             map={Array.from(map)}
-                            hover={hover}
-                            cover={cover}
+                            hover={hover ? map[hover] : null}
+                            cover={demo}
                             score={goaled}
                             blueScore={blueScore}
                             redScore={redScore}
                             hand={hand}
                             message={message}
                             clickCell={(cellNumber: number) => {
-                                console.log(cellNumber)
+                                ev_mouseClick(cellNumber)
                             }}
                         ></Board>
                     </div>
@@ -825,6 +826,6 @@ export default function Colamone() {
                 </div>
             </div>
             <Footer></Footer>
-        </span>
+        </span >
     );
 }
