@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Params from "../params";
 import bg from '../bk.gif';
 import { DrawUtil } from "../DrawUtil";
@@ -12,12 +12,13 @@ type Props = {
 }
 
 export default function Piece(props: Props) {
-    const [canv_bk] = useState(document.createElement("canvas"));
-    const [canvas] = useState(document.createElement("canvas"));
+
     const piece1 = useRef<SVGImageElement>(null)
     const piece2 = useRef<SVGImageElement>(null)
 
     useEffect(() => {
+        const canv_bk = document.createElement("canvas");
+        const canvas = document.createElement("canvas");
         const drawPiece1 = (element: SVGImageElement, canvas: HTMLCanvasElement, number: number, goal: boolean, img_bk: HTMLImageElement | null = null) => {
             const cellSize = (Params.CANV_SIZE / 6) * 3;
             canvas.width = (Params.CANV_SIZE / 6) * 3;
@@ -165,7 +166,7 @@ export default function Piece(props: Props) {
                 drawPiece1(piece1.current, canvas, props.number, props.goal, img_bk);
             }
         }
-    }, [props.display, props.goal, props.number, canvas, canv_bk])
+    }, [props.display, props.goal, props.number])
 
     return (<g>
         <image ref={piece1} className="piece1" x={props.x} y={props.y} width="83" height="83" display={props.display} />
