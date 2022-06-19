@@ -9,9 +9,9 @@ export const $turn_player = atom<number>({
   key: 'turn_player',
   default: 0,
 });
-export const $map = atom<number[]>({
+export const $map = atom<Int8Array>({
   key: 'map',
-  default: [],
+  default: new Int8Array(),
 });
 export const $hover = atom<number | null>({
   key: 'hover',
@@ -21,8 +21,16 @@ export const $cover = atom<boolean>({
   key: 'cover',
   default: false,
 });
-export const $score = atom<boolean>({
-  key: 'score',
+export const $demo = atom<boolean>({
+  key: 'demo',
+  default: false,
+});
+export const $goaled = atom<boolean>({
+  key: 'goaled',
+  default: false,
+});
+export const $auto_log = atom<boolean>({
+  key: 'auto_log',
   default: false,
 });
 export const $hand = atom<Hand | null>({
@@ -44,6 +52,18 @@ export const $redScore = atom<number>({
 export const $level = atom<number>({
   key: 'level',
   default: 0,
+});
+export const $wins = atom<number>({
+  key: 'wins',
+  default: 0,
+});
+export const $log_pointer = atom<number>({
+  key: 'log_pointer',
+  default: 0,
+});
+export const $thinktime = atom<number | null>({
+  key: 'thinktime',
+  default: 0.0,
 });
 export const $winner = atom<number | null>({
   key: 'winner',
