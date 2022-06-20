@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Hand } from "../Hand";
-import Params from "../params";
+import Params from "../../static/params";
+import { Hand } from "../../static/rule";
 type Props = {
     map: number[]
     x: number

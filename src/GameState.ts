@@ -1,10 +1,7 @@
 import { atom } from 'recoil';
+import { Mode } from './model/Mode';
 import { Hand } from './static/rule';
-export enum Mode {
-  game,
-  result,
-  log,
-}
+
 export const $turn_player = atom<number>({
   key: 'turn_player',
   default: 0,

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import Params from "../params";
+import Params from "../../static/params";
 type Props = {
     show: boolean
     x: number

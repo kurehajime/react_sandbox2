@@ -1,4 +1,4 @@
-import { Mode } from "../GameState"
+import { Mode } from "../../model/Mode"
 
 type Props = {
     level: number

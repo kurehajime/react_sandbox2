@@ -1,13 +1,13 @@
-import Params from "../params";
+import Params from "../../static/params";
 import Background from './Background';
 import PieceElement from './Piece';
 import { useRef, useState } from "react";
-import { Piece } from "../Piece";
+import { Piece } from "../../model/Piece";
 import Cover from "./Cover";
 import Score from "./Score";
 import Shadow from "./Shadow";
-import { Hand } from "../Hand";
 import Message from "./Message";
+import { Hand } from "../../static/rule";
 
 type Props = {
     map: number[]

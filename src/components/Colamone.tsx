@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import Board from './Board';
-import Panel from './Panel';
-import Footer from './Footer';
-import Header from './Header';
-import { $auto_log, $blueScore, $cover, $demo, $goaled, $hand, $hover, $level, $log_pointer, $map, $map_list, $message, $mode, $redScore, $thinktime, $turn_player, $winner, $wins } from '../GameState';
+import Board from './Colamone/Board';
+import Panel from './Colamone/Panel';
+import Footer from './Colamone/Footer';
+import Header from './Colamone/Header';
+import { $auto_log, $blueScore, $demo, $goaled, $hand, $hover, $level, $log_pointer, $map, $map_list, $message, $mode, $redScore, $thinktime, $turn_player, $winner, $wins } from '../GameState';
 import { useRecoilState } from 'recoil';
 import { Hand, MapArray, Rule } from '../static/rule';
 import Cookie from '../static/cookie';
@@ -12,7 +12,6 @@ import { Util } from '../static/util';
 
 export default function Colamone() {
     const [map, setMap] = useRecoilState($map)
-    const [cover] = useRecoilState($cover)
     const [hand, setHand] = useRecoilState($hand)
     const [message, setMessage] = useRecoilState($message)
     const [blueScore, setBlueScore] = useRecoilState($blueScore)

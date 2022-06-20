@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import Params from "../params";
-import { DrawUtil } from "../DrawUtil";
+import Params from "../../static/params";
+import { DrawUtil } from "../../static/DrawUtil";
 type Props = {
     x: number
     y: number

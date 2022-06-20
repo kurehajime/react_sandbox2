@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
-import Params from "../params";
-import { DrawUtil } from "../DrawUtil";
-import params from "../params";
+import Params from "../../static/params";
+import { DrawUtil } from "../../static/DrawUtil";
 type Props = {
     show: boolean
     x: number
@@ -55,7 +54,7 @@ export default function Cover(props: Props) {
             ctx_cover.shadowColor = 'rgba(0, 0, 0, 0)';
             ctx_cover.font = 'bold ' + fontsize + 'px Play,sans-serif';
             ctx_cover.globalAlpha = 1;
-            ctx_cover.fillStyle = params.COLOR_LINE;
+            ctx_cover.fillStyle = Params.COLOR_LINE;
             ctx_cover.textBaseline = 'middle';
             ctx_cover.textAlign = 'center';
             ctx_cover.beginPath();
@@ -64,7 +63,7 @@ export default function Cover(props: Props) {
             message = 'colamone';
             fontsize = Math.round(cellSize * 1);
             ctx_cover.font = 'bold ' + fontsize + 'px Play,sans-serif';
-            ctx_cover.fillStyle = params.COLOR_WHITE;
+            ctx_cover.fillStyle = Params.COLOR_WHITE;
             ctx_cover.shadowBlur = 0;
             ctx_cover.beginPath();
             ctx_cover.fillText(message, cellSize * 3, cellSize * 2);
