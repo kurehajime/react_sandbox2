@@ -100,6 +100,7 @@ export default function Colamone() {
 
         logMenu(logArray.length !== 0);
 
+        setMapList(Rule.add1000day(map,mapList))
         updateMessage();
         Util.setTweet(); // ツイートボタンを生成
 
@@ -211,11 +212,13 @@ export default function Colamone() {
 
                 // AIが考える。
                 setMessage('thinking...')
+                setMapList(Rule.add1000day(map,mapList))
                 updateMessage();
                 if (winner === null) {
                     window.setTimeout(() => {
                         ai(level);
                         setMessage('')
+                        setMapList(Rule.add1000day(map,mapList))
                         updateMessage();
                     }, 250);
                 } else {
@@ -386,9 +389,7 @@ export default function Colamone() {
                 setWinner(0)
             }
         } else {
-            const [is1000day, map_list] = Rule.is1000day(map, Object.assign({}, mapList))
-            setMapList(map_list)
-            if (is1000day) {
+            if (Rule.is1000day(map, Object.assign({}, mapList))) {
                 setWinner(0)
             }
         }
@@ -405,6 +406,7 @@ export default function Colamone() {
         setMap(Rule.copyMap(logArray[logPointer]))
         setWinner(null)
         setGoaled(false)
+        setMapList(Rule.add1000day(map,mapList))
         updateMessage();
     }
 
@@ -418,6 +420,7 @@ export default function Colamone() {
         setMap(Rule.copyMap(logArray[logPointer]))
         setWinner(null)
         setGoaled(false)
+        setMapList(Rule.add1000day(map,mapList))
         updateMessage();
     }
 
@@ -428,6 +431,7 @@ export default function Colamone() {
         if (logPointer + 1 > logArray.length - 1) { return; }
         setLogPointer(logPointer + 1)
         setMap(Rule.copyMap(logArray[logPointer]))
+        setMapList(Rule.add1000day(map,mapList))
         updateMessage();
     }
 
@@ -438,6 +442,7 @@ export default function Colamone() {
         setLogPointer(logArray.length - 1)
         setAutoLog(false)
         setMap(Rule.copyMap(logArray[logPointer]))
+        setMapList(Rule.add1000day(map,mapList))
         updateMessage();
     }
 

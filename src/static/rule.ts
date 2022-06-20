@@ -305,18 +305,25 @@ export class Rule {
     /** 
      * 千日手
      */
-    static is1000day(wkMap: MapArray, map_list: { [index: string]: number }): [boolean, { [index: string]: number }] {
+    static is1000day(wkMap: MapArray, map_list: { [index: string]: number }): boolean {
+        const map_json = JSON.stringify(wkMap);
+        if (map_list[map_json] && map_list[map_json] >= this.LIMIT_1000DAY) {
+            return true;
+        }
+        return false;
+    }
+    /** 
+     * 千日手カウント
+     */
+    static add1000day(wkMap: MapArray, map_list: { [index: string]: number }):{ [index: string]: number }{
         const map_json = JSON.stringify(wkMap);
         if (map_list[map_json] === undefined) {
             map_list[map_json] = 1;
-            return [false, map_list];
+            return map_list;
         } else {
             map_list[map_json] += 1;
         }
-        if (map_list[map_json] >= this.LIMIT_1000DAY) {
-            return [true, map_list];
-        }
-        return [false, map_list];
+        return Object.assign({}, map_list);
     }
     /** 
     * ゴールしたか
