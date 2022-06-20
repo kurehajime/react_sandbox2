@@ -5,10 +5,10 @@ import Footer from './Footer';
 import Header from './Header';
 import { $auto_log, $blueScore, $cover, $demo, $goaled, $hand, $hover, $level, $log_pointer, $map, $map_list, $message, $mode, $redScore, $thinktime, $turn_player, $winner, $wins } from '../GameState';
 import { useRecoilState } from 'recoil';
-import { Hand, MapArray, Rule } from '../logic/rule';
-import Cookie from '../logic/cookie';
-import { Aijs } from '../logic/ai';
-import { Util } from '../logic/util';
+import { Hand, MapArray, Rule } from '../static/rule';
+import Cookie from '../static/cookie';
+import { Aijs } from '../static/ai';
+import { Util } from '../static/util';
 
 export default function Colamone() {
     const [map, setMap] = useRecoilState($map)

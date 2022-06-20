@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Hand } from './logic/rule';
+import { Hand } from './static/rule';
 export enum Mode {
   game,
   result,
