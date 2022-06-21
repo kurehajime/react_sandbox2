@@ -8,6 +8,7 @@ import Score from "./Score";
 import Shadow from "./Shadow";
 import Message from "./Message";
 import { Hand } from "../../static/rule";
+import Hover from "./Hover";
 
 type Props = {
     map: number[]
@@ -74,14 +75,6 @@ export default function Board(props: Props) {
         return Math.floor(x / cellSize) * 10 + Math.floor(y / cellSize);
     }
 
-    const mouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-        if (props.hover == null) {
-            return;
-        }
-        const plus = (Params.CANV_SIZE / 6) / 2;
-        setHoverX(e.nativeEvent.offsetX - plus)
-        setHoverY(e.nativeEvent.offsetY - plus)
-    }
     const mouseClick = (e: React.MouseEvent<SVGSVGElement>) => {
         if (svg.current) {
             const cellNumber = pointToCellNumber(
@@ -90,8 +83,11 @@ export default function Board(props: Props) {
                 e.nativeEvent.offsetX,
                 e.nativeEvent.offsetY
             );
+            
+        const plus = (Params.CANV_SIZE / 6) / 2;
+            setHoverX(e.nativeEvent.offsetX - plus)
+            setHoverY(e.nativeEvent.offsetY - plus)
             props.clickCell(cellNumber)
-            mouseMove(e);
         }
     }
 
@@ -103,7 +99,7 @@ export default function Board(props: Props) {
         hover_piece.push(hp)
     }
 
-    return (<svg ref={svg} width={Params.CANV_SIZE} height={Params.CANV_SIZE} onMouseMove={mouseMove} onMouseDown={mouseClick} >
+    return (<svg ref={svg} width={Params.CANV_SIZE} height={Params.CANV_SIZE} onMouseDown={mouseClick} >
         <Background x={0} y={0} w={Params.CANV_SIZE} h={Params.CANV_SIZE} />
         <Shadow
             map={props.map}
@@ -127,18 +123,16 @@ export default function Board(props: Props) {
                 )
             })
         }
-        {
-            hover_piece.map(p => {
-                return (<PieceElement
-                    key={p.number}
-                    x={hoverX}
-                    y={hoverY}
-                    number={p.number}
-                    goal={p.goal}
-                    display={p.display}
-                />)
-            })
-        }
+       <Hover
+            x={0}
+            y={0}
+            w={Params.CANV_SIZE}
+            h={Params.CANV_SIZE}
+            clickedX={hoverX}
+            clickedY={hoverY}
+            hover_piece={hover_piece}
+
+       ></Hover>
         <Score
             x={0}
             y={0}
