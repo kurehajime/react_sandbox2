@@ -171,7 +171,7 @@ export default function Piece(props: Props) {
     }, [props.display, props.goal, props.number])
 
     return (<g>
-        <image ref={piece1} className={props.isHover ? '':'easeIn'} x={props.x} y={props.y} width="83" height="83" display={props.display} />
-        <image ref={piece2} className={props.isHover ? '':'easeIn'} x={props.x} y={props.y} width="83" height="83" display={props.display} />
+        <image ref={piece1} className={props.isHover ? 'easeInHover':'easeIn'} x={props.x} y={props.y} width="83" height="83" display={props.display} />
+        <image ref={piece2} className={props.isHover ? 'easeInHover':'easeIn'} x={props.x} y={props.y} width="83" height="83" display={props.display} />
     </g>)
 }
