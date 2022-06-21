@@ -307,7 +307,7 @@ export class Rule {
      */
     static is1000day(wkMap: MapArray, map_list: { [index: string]: number }): boolean {
         const map_json = JSON.stringify(wkMap);
-        if (map_list[map_json] && map_list[map_json] >= this.LIMIT_1000DAY) {
+        if (map_list[map_json] &&map_list[map_json] >= this.LIMIT_1000DAY) {
             return true;
         }
         return false;
@@ -315,8 +315,10 @@ export class Rule {
     /** 
      * 千日手カウント
      */
-    static add1000day(wkMap: MapArray, map_list: { [index: string]: number }):{ [index: string]: number }{
+    static add1000day(wkMap: MapArray, _map_list: { [index: string]: number }):{ [index: string]: number }{
         const map_json = JSON.stringify(wkMap);
+        const map_list = JSON.parse(JSON.stringify(_map_list));
+
         if (map_list[map_json] === undefined) {
             map_list[map_json] = 1;
             return map_list;
@@ -386,6 +388,4 @@ export class Rule {
         }
         return count;
     }
-
-
 }
