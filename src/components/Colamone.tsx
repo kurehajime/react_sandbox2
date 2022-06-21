@@ -8,39 +8,13 @@ import Cookie from '../static/cookie';
 import { Aijs } from '../static/ai';
 import { Util } from '../static/util';
 import { GameState } from '../model/GameState';
-import { Mode } from '../model/Mode';
+import { $GameState, $goaled } from '../GameState';
+import { useRecoilState } from 'recoil';
 
 export default function Colamone() {
-    const [originalGameState, _setGameState] = useState<GameState>({
-        turnPlayer:0,
-        map:new Int8Array([
-              -1, 0, 0, 0, 0, 6, 0, 0, 0, 0, -2, -8,
-              0, 0, 7, 5, 0, 0, 0, 0, -3, 0, 0, 0,
-              0, 4, 0, 0, 0, 0, -4, 0, 0, 0, 0,
-              3, 0, 0, 0, 0, -5, -7, 0, 0, 8, 2,
-              0, 0, 0, 0, -6, 0, 0, 0, 0, 1
-            ]),
-        startMap:new Int8Array(),
-        hover:null,
-        demo:false,
-        auto_log:false,
-        hand:null,
-        message:'',
-        blueScore:0,
-        redScore:0,
-        level:0,
-        wins:0,
-        log_pointer:0,
-        thinktime:null,
-        winner:null,
-        mapList:{},
-        mode:Mode.game,
-        logArray:[],
-        logArray2:[],
-        logPointer:0
-      })
+    const [originalGameState, _setGameState] = useRecoilState($GameState)
     const gameState = {...originalGameState};
-    const [goaled, setGoaled] = useState(false)
+    const [goaled, setGoaled] = useRecoilState($goaled)
     const [cookie] = useState(new Cookie());
 
     /** 
@@ -193,6 +167,7 @@ export default function Colamone() {
         if (gameState.hover === null) {
             if (gameState.map[target] * gameState.turnPlayer > 0) {
                 gameState.hover = target
+                setGameState(gameState)
             }
         } else {
             if (target == gameState.hover) {
