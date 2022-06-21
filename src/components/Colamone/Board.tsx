@@ -118,6 +118,7 @@ export default function Board(props: Props) {
                         y={p.y}
                         number={p.number}
                         goal={p.goal}
+                        isHover={false}
                         display={p.display}
                     />
                 )

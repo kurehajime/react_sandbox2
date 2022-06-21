@@ -39,25 +39,24 @@ export default function Hover(props: Props) {
     }, [props.clickedX,props.clickedY])
 
     const mouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-        if (props.hover_piece.length ===0) {
-            return;
-        }
+
         const plus = (Params.CANV_SIZE / 6) / 2;
         setHoverX(e.nativeEvent.offsetX - plus)
         setHoverY(e.nativeEvent.offsetY - plus)
     }
 
-    return (<g className="hover"  onMouseMove={mouseMove} >
+    return (<g className="hover"  onMouseMove={mouseMove}>
         <image ref={bg1} x={props.x} y={props.y} width={props.w} height={props.h} />
         {
             props.hover_piece.map(p => {
                 return (<PieceElement
-                    key={p.number}
+                    key={0}
                     x={hoverX}
                     y={hoverY}
                     number={p.number}
                     goal={p.goal}
                     display={p.display}
+                    isHover={true}
                 />)
             })
         }
