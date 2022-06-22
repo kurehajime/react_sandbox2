@@ -1,4 +1,4 @@
-import { Hand, MapArray } from "../static/rule"
+import { Hand, MapArray } from "../static/Rule"
 import { Mode } from "./Mode"
 
 export type GameState = {

@@ -1,7 +1,7 @@
 /* @license Copyright (c) @kurehajime / source code: https://github.com/kurehajime/colamone_js */
 'use strict';
-import { Rule, MapArray, Hand, HandNode } from "./rule";
-import { Eval } from "./eval";
+import { Rule, MapArray, Hand, HandNode } from "./Rule";
+import { Eval } from "./Eval";
 
 export class Aijs {
     /** 

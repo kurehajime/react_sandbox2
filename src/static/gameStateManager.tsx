@@ -1,8 +1,8 @@
 import { GameState } from "../model/GameState"
 import { Mode } from "../model/Mode";
-import cookie from "./cookie";
-import { Rule } from "./rule";
-import { Util } from "./util";
+import cookie from "./Cookie";
+import { Rule } from "./Rule";
+import { Util } from "./Util";
 
 export default class GameStateManager{
     static InitGame(_gameState: GameState,cookie:cookie): GameState  {

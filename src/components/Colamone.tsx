@@ -3,14 +3,14 @@ import Board from './Colamone/Board';
 import Panel from './Colamone/Panel';
 import Footer from './Colamone/Footer';
 import Header from './Colamone/Header';
-import { Rule } from '../static/rule';
-import Cookie from '../static/cookie';
-import { Aijs } from '../static/ai';
-import { Util } from '../static/util';
+import { Rule } from '../static/Rule';
+import Cookie from '../static/Cookie';
+import { Aijs } from '../static/Ai';
+import { Util } from '../static/Util';
 import { GameState } from '../model/GameState';
 import { $GameState, $goaled } from '../GameState';
 import { useRecoilState } from 'recoil';
-import GameStateManager from '../static/stateChanger';
+import GameStateManager from '../static/GameStateManager';
 
 export default function Colamone() {
     const [originalGameState, _setGameState] = useRecoilState($GameState)

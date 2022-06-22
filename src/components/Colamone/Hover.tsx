@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Piece } from "../../model/Piece";
-import Params from "../../static/params";
+import Params from "../../static/Params";
 import PieceElement from './Piece';
 type Props = {
     x: number

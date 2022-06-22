@@ -1,6 +1,6 @@
 /* @license Copyright (c) @kurehajime / source code: https://github.com/kurehajime/colamone_js */
 'use strict';
-import { Rule, MapArray } from "./rule";
+import { Rule, MapArray } from "./Rule";
 
 export class Eval {
     /** 

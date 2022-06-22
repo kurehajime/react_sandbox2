@@ -1,4 +1,4 @@
-import Params from "../../static/params";
+import Params from "../../static/Params";
 import Background from './Background';
 import PieceElement from './Piece';
 import { useRef, useState } from "react";
@@ -6,7 +6,7 @@ import { Piece } from "../../model/Piece";
 import Cover from "./Cover";
 import Score from "./Score";
 import Message from "./Message";
-import { Hand } from "../../static/rule";
+import { Hand } from "../../static/Rule";
 import Hover from "./Hover";
 
 type Props = {
