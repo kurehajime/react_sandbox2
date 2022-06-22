@@ -3,13 +3,14 @@ import Board from './Colamone/Board';
 import Panel from './Colamone/Panel';
 import Footer from './Colamone/Footer';
 import Header from './Colamone/Header';
-import {MapArray, Rule } from '../static/rule';
+import { Rule } from '../static/rule';
 import Cookie from '../static/cookie';
 import { Aijs } from '../static/ai';
 import { Util } from '../static/util';
 import { GameState } from '../model/GameState';
 import { $GameState, $goaled } from '../GameState';
 import { useRecoilState } from 'recoil';
+import StateChanger from '../static/stateChanger';
 
 export default function Colamone() {
     const [originalGameState, _setGameState] = useRecoilState($GameState)
@@ -17,74 +18,16 @@ export default function Colamone() {
     const [cookie] = useState(new Cookie());
     let gameState = {...originalGameState};
 
-    /** 
-     * ゲーム開始
-     */
-    const Run = () => {
-
+    const initDom = ()=>{
         Util.zoom(); // 小さい端末でズーム
         manual(window.innerHeight < window.innerWidth);
-        gameState.turnPlayer = 1
-        gameState.demo = true
-
         window.addEventListener('orientationchange', Util.zoom);
+    }
 
-        const _map = Rule.shuffleBoard()
-        gameState.map = _map
-        gameState.startMap = _map
-
-        // 連勝記録初期化
-        if (!cookie.storage.getItem('level_1')) {
-            cookie.storage.setItem('level_1', 0);
-        }
-        if (!cookie.storage.getItem('level_2')) {
-            cookie.storage.setItem('level_2', 0);
-        }
-        if (!cookie.storage.getItem('level_3')) {
-            cookie.storage.setItem('level_3', 0);
-        }
-        if (!cookie.storage.getItem('level_4')) {
-            cookie.storage.setItem('level_4', 0);
-        }
-        if (!cookie.storage.getItem('level_5')) {
-            cookie.storage.setItem('level_5', 0);
-        }
-        // レベル記憶
-        if (cookie.storage.getItem('level_save') !== undefined && cookie.storage.getItem('level_save') !== 'undefined' && cookie.storage.getItem('level_save') !== null) {
-            gameState.level = parseInt(cookie.storage.getItem('level_save'))
-        } else {
-            cookie.storage.setItem('level_save', 1);
-            gameState.level =1
-        }
-
-
-        // パラメータを取得
-        const paramObj = Util.getParam();
-
-        // 盤面を初期化
-        if (paramObj.init) {
-            gameState.startMap=Util.getMapByParam(gameState.map, paramObj.init)
-            gameState.map = Rule.copyMap(gameState.startMap)
-        } else {
-            gameState.startMap = gameState.map
-        }
-        // ログをデコード
-        if (paramObj.log) {
-            gameState.logArray = Util.decodeLog(paramObj.log, gameState.startMap)
-        }
-        // レベル取得
-        if (paramObj.lv) {
-            gameState.level = parseInt(paramObj.lv)
-        }
-
-        logMenu(gameState.logArray.length !== 0);
-
-        gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        Util.setTweet(); // ツイートボタンを生成
-
+    const loopDemo = ()=>{
         if (gameState.logArray.length === 0) {
             if (Util.isBot() == false) {
-                // TODO : DEMOをどうにかする
+                          // TODO : DEMOをどうにかする
                 // window.setTimeout(() => {
                 //     if (demo == true) {
                 //         this.intervalID = window.setInterval(() => { this.playDemo() }, 400);
@@ -92,25 +35,7 @@ export default function Colamone() {
                 //     }
                 // }, 500);
             }
-        } else {
-            gameState.demo =false
-            gameState.auto_log=true
-            // TODO : DEMOをどうにかする
-            // this.intervalID_log = window.setInterval(() => { this.playLog() }, 1000);
         }
-        setGoaled(false)
-        gameState = Util.calcWinner(gameState,cookie)
-        setGameState(gameState)
-    }
-
-    const loopDemo = ()=>{
-                        // TODO : DEMOをどうにかする
-                // window.setTimeout(() => {
-                //     if (demo == true) {
-                //         this.intervalID = window.setInterval(() => { this.playDemo() }, 400);
-                //         this.playDemo();
-                //     }
-                // }, 500);
     }
 
     /** 
@@ -206,7 +131,7 @@ export default function Colamone() {
                 // AIが考える。
                 gameState.message = 'thinking...'
                 gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-                gameState = Util.calcWinner(gameState,cookie)
+                gameState = StateChanger.calcWinner(gameState,cookie)
                 setGameState(gameState)
                 if (gameState.winner === null) {
                     window.setTimeout(() => {
@@ -318,7 +243,7 @@ export default function Colamone() {
         gameState.thinktime = ((endTime.getTime() - startTime.getTime()) / 1000)
         gameState.message = ''
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = Util.calcWinner(gameState,cookie)
+        gameState = StateChanger.calcWinner(gameState,cookie)
     }
 
 
@@ -331,7 +256,7 @@ export default function Colamone() {
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.winner = null
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = Util.calcWinner(gameState,cookie)
+        gameState = StateChanger.calcWinner(gameState,cookie)
         setGoaled(false)
         setGameState(gameState)
     }
@@ -347,7 +272,7 @@ export default function Colamone() {
         gameState.winner = null
         setGoaled(false)
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = Util.calcWinner(gameState,cookie)
+        gameState = StateChanger.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -359,7 +284,7 @@ export default function Colamone() {
         gameState.logPointer = (gameState.logPointer + 1)
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = Util.calcWinner(gameState,cookie)
+        gameState = StateChanger.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -371,7 +296,7 @@ export default function Colamone() {
         gameState.auto_log = false
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = Util.calcWinner(gameState,cookie)
+        gameState = StateChanger.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -412,14 +337,9 @@ export default function Colamone() {
             document.querySelector('.manual')?.classList.add("hide");
         }
     }
-    const logMenu = (show: boolean) => {
-        return
-    }
     /** 
      * ゲーム終了
      */
-
-
     const  setGameState= (gs:GameState)=>{
         _setGameState({...gs})
     }
@@ -427,7 +347,10 @@ export default function Colamone() {
     //------------------------------------
 
     useEffect(() => {
-        Run()
+        setGoaled(false)
+        initDom()
+        gameState = StateChanger.InitGame(gameState,cookie)
+        setGameState(gameState)
     }, [])
 
     return (
