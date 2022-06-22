@@ -4,7 +4,7 @@ import cookie from "./cookie";
 import { Rule } from "./rule";
 import { Util } from "./util";
 
-export default class StateChanger{
+export default class GameStateManager{
     static InitGame(_gameState: GameState,cookie:cookie): GameState  {
         let gameState ={..._gameState}
         gameState.turnPlayer = 1
@@ -70,7 +70,7 @@ export default class StateChanger{
             gameState.demo =false
             gameState.auto_log=true
         }
-        gameState = StateChanger.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState,cookie)
         return gameState
       }
 
@@ -124,25 +124,25 @@ export default class StateChanger{
      * メッセージを更新
      */
      static calcWinner(_gameState:GameState,cookie:cookie):GameState{
-        let gameState=StateChanger.calcScore({..._gameState});
+        let gameState=GameStateManager.calcScore({..._gameState});
         
         if (gameState.logArray.length === 0) {
             if (gameState.winner == 1) {
                 gameState.message = 'You win!'
                 cookie.storage.setItem('level_' + gameState.level,
                     parseInt(cookie.storage.getItem('level_' + gameState.level)) + 1);
-                    gameState = StateChanger.endgame(gameState);
+                    gameState = GameStateManager.endgame(gameState);
             } else if (gameState.winner == -1) {
                 gameState.message ='You lose...'
                 cookie.storage.setItem('level_' + gameState.level, 0);
-                gameState = StateChanger.endgame(gameState);
+                gameState = GameStateManager.endgame(gameState);
             } else if (gameState.winner === 0) {
                 if (gameState.mapList[JSON.stringify(gameState.map)] >= Rule.LIMIT_1000DAY) {
                     gameState.message ='3fold repetition'
                 } else {
                     gameState.message ='-- Draw --'
                 }
-                gameState = StateChanger.endgame(gameState);
+                gameState = GameStateManager.endgame(gameState);
             }
         }
 

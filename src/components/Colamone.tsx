@@ -10,7 +10,7 @@ import { Util } from '../static/util';
 import { GameState } from '../model/GameState';
 import { $GameState, $goaled } from '../GameState';
 import { useRecoilState } from 'recoil';
-import StateChanger from '../static/stateChanger';
+import GameStateManager from '../static/stateChanger';
 
 export default function Colamone() {
     const [originalGameState, _setGameState] = useRecoilState($GameState)
@@ -131,7 +131,7 @@ export default function Colamone() {
                 // AIが考える。
                 gameState.message = 'thinking...'
                 gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-                gameState = StateChanger.calcWinner(gameState,cookie)
+                gameState = GameStateManager.calcWinner(gameState,cookie)
                 setGameState(gameState)
                 if (gameState.winner === null) {
                     window.setTimeout(() => {
@@ -243,7 +243,7 @@ export default function Colamone() {
         gameState.thinktime = ((endTime.getTime() - startTime.getTime()) / 1000)
         gameState.message = ''
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = StateChanger.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState,cookie)
     }
 
 
@@ -256,7 +256,7 @@ export default function Colamone() {
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.winner = null
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = StateChanger.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState,cookie)
         setGoaled(false)
         setGameState(gameState)
     }
@@ -272,7 +272,7 @@ export default function Colamone() {
         gameState.winner = null
         setGoaled(false)
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = StateChanger.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -284,7 +284,7 @@ export default function Colamone() {
         gameState.logPointer = (gameState.logPointer + 1)
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = StateChanger.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -296,7 +296,7 @@ export default function Colamone() {
         gameState.auto_log = false
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = StateChanger.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -349,7 +349,7 @@ export default function Colamone() {
     useEffect(() => {
         setGoaled(false)
         initDom()
-        gameState = StateChanger.InitGame(gameState,cookie)
+        gameState = GameStateManager.InitGame(gameState,cookie)
         setGameState(gameState)
     }, [])
 
