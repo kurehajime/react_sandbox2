@@ -13,9 +13,9 @@ import { useRecoilState } from 'recoil';
 
 export default function Colamone() {
     const [originalGameState, _setGameState] = useRecoilState($GameState)
-    const gameState = {...originalGameState};
     const [goaled, setGoaled] = useRecoilState($goaled)
     const [cookie] = useState(new Cookie());
+    let gameState = {...originalGameState};
 
     /** 
      * ゲーム開始
@@ -99,8 +99,18 @@ export default function Colamone() {
             // this.intervalID_log = window.setInterval(() => { this.playLog() }, 1000);
         }
         setGoaled(false)
-        _updateMessage();
+        gameState = Util.calcWinner(gameState,cookie)
         setGameState(gameState)
+    }
+
+    const loopDemo = ()=>{
+                        // TODO : DEMOをどうにかする
+                // window.setTimeout(() => {
+                //     if (demo == true) {
+                //         this.intervalID = window.setInterval(() => { this.playDemo() }, 400);
+                //         this.playDemo();
+                //     }
+                // }, 500);
     }
 
     /** 
@@ -196,7 +206,7 @@ export default function Colamone() {
                 // AIが考える。
                 gameState.message = 'thinking...'
                 gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-                _updateMessage();
+                gameState = Util.calcWinner(gameState,cookie)
                 setGameState(gameState)
                 if (gameState.winner === null) {
                     window.setTimeout(() => {
@@ -308,80 +318,9 @@ export default function Colamone() {
         gameState.thinktime = ((endTime.getTime() - startTime.getTime()) / 1000)
         gameState.message = ''
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        _updateMessage();
+        gameState = Util.calcWinner(gameState,cookie)
     }
 
-    /** 
-     * メッセージを更新
-     */
-    const _updateMessage = () => {
-        _calcScore();
-        if (gameState.logArray.length === 0) {
-            if (gameState.winner == 1) {
-                gameState.message = 'You win!'
-                cookie.storage.setItem('level_' + gameState.level,
-                    parseInt(cookie.storage.getItem('level_' + gameState.level)) + 1);
-                endgame(gameState.logArray);
-            } else if (gameState.winner == -1) {
-                gameState.message ='You lose...'
-                cookie.storage.setItem('level_' + gameState.level, 0);
-                endgame(gameState.logArray);
-            } else if (gameState.winner === 0) {
-                if (gameState.mapList[JSON.stringify(gameState.map)] >= Rule.LIMIT_1000DAY) {
-                    gameState.message ='3fold repetition'
-                } else {
-                    gameState.message ='-- Draw --'
-                }
-                endgame(gameState.logArray);
-            }
-        }
-
-        if (cookie.storage.getItem('level_' + gameState.level) > 0) {
-            gameState.wins = cookie.storage.getItem('level_' + gameState.level)
-        }
-    }
-    /** 
-     * 得点計算。
-     */
-    const _calcScore = () => {
-        let sum1 = 0;
-        let sum2 = 0;
-        const GoalTop = [0, 10, 20, 30, 40, 50];
-        const GoalBottom = [5, 15, 25, 35, 45, 55];
-        // 点数勝利        
-        for (const i in GoalTop) {
-            if (gameState.map[GoalTop[i]] * 1 > 0) {
-                sum1 += gameState.map[GoalTop[i]];
-            }
-        }
-        for (const i in GoalBottom) {
-            if (gameState.map[GoalBottom[i]] * -1 > 0) {
-                sum2 += gameState.map[GoalBottom[i]];
-            }
-        }
-        if (sum1 >= 8) {
-            gameState.winner =  1
-        } else if (sum2 <= -8) {
-            gameState.winner = -1
-        }
-
-        // 手詰まりは判定
-        if (Rule.isNoneNode(gameState.map)) {
-            if (Math.abs(sum1) > Math.abs(sum2)) {
-                gameState.winner = 1
-            } else if (Math.abs(sum1) < Math.abs(sum2)) { // 引き分けは後攻勝利
-                gameState.winner = -1
-            } else if (Math.abs(sum1) == Math.abs(sum2)) {
-                gameState.winner = 0
-            }
-        } else {
-            if (Rule.is1000day(gameState.map, Object.assign({}, gameState.mapList))) {
-                gameState.winner = 0
-            }
-        }
-        gameState.blueScore = sum1
-        gameState.redScore = sum2
-    }
 
     /** 
      * ログを全部巻き戻す
@@ -392,7 +331,7 @@ export default function Colamone() {
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.winner = null
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        _updateMessage();
+        gameState = Util.calcWinner(gameState,cookie)
         setGoaled(false)
         setGameState(gameState)
     }
@@ -408,7 +347,7 @@ export default function Colamone() {
         gameState.winner = null
         setGoaled(false)
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        _updateMessage();
+        gameState = Util.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -420,7 +359,7 @@ export default function Colamone() {
         gameState.logPointer = (gameState.logPointer + 1)
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        _updateMessage();
+        gameState = Util.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -432,7 +371,7 @@ export default function Colamone() {
         gameState.auto_log = false
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        _updateMessage();
+        gameState = Util.calcWinner(gameState,cookie)
         setGameState(gameState)
     }
 
@@ -479,13 +418,7 @@ export default function Colamone() {
     /** 
      * ゲーム終了
      */
-    const endgame = (logArray: Array<MapArray>) => {
-        if (logArray.length === 0) {
-            document.querySelector('#span_replay')?.classList.remove("hide");
-            document.querySelector('#span_tweetlog')?.classList.remove("hide");
-        }
-        setGameState(gameState)
-    }
+
 
     const  setGameState= (gs:GameState)=>{
         _setGameState({...gs})
