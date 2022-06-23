@@ -4,7 +4,6 @@ import PieceElement from './Piece';
 import { useRef, useState } from "react";
 import { Piece } from "../../model/Piece";
 import Cover from "./Cover";
-import Score from "./Score";
 import Message from "./Message";
 import { Hand } from "../../static/Rule";
 import Hover from "./Hover";
@@ -13,9 +12,6 @@ type Props = {
     map: number[]
     hover: number | null
     cover: boolean
-    score: boolean
-    blueScore: number
-    redScore: number
     message: string
     hand: Hand | null
     clickCell: (cellNumber: number) => void
@@ -125,15 +121,6 @@ export default function Board(props: Props) {
             hover_piece={hover_piece}
 
        ></Hover>
-        <Score
-            x={0}
-            y={0}
-            w={Params.CANV_SIZE}
-            h={Params.CANV_SIZE}
-            redScore={props.blueScore}
-            blueScore={props.redScore}
-            show={props.score}
-        ></Score>
         <Message
             x={0}
             y={0}

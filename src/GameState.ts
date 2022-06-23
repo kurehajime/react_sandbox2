@@ -2,10 +2,6 @@ import { atom } from 'recoil';
 import { GameState } from './model/GameState';
 import { Mode } from './model/Mode';
 
-export const $goaled = atom<boolean>({
-  key: 'goaled',
-  default: false,
-});
 export const $GameState = atom<GameState>({
   key: 'GameState',
   default: {

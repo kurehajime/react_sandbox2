@@ -1,11 +1,13 @@
 import { GameState } from "../model/GameState"
 import { Mode } from "../model/Mode";
+import { Aijs } from "./Ai";
+import Cookie from "./Cookie";
 import cookie from "./Cookie";
 import { Rule } from "./Rule";
 import { Util } from "./Util";
 
 export default class GameStateManager{
-    static InitGame(_gameState: GameState,cookie:cookie): GameState  {
+    static InitGame(_gameState: GameState): GameState  {
         let gameState ={..._gameState}
         gameState.turnPlayer = 1
         gameState.demo = true
@@ -16,26 +18,26 @@ export default class GameStateManager{
         gameState.startMap = _map
     
         // 連勝記録初期化
-        if (!cookie.storage.getItem('level_1')) {
-            cookie.storage.setItem('level_1', 0);
+        if (!Cookie.getItem('level_1')) {
+            Cookie.setItem('level_1', 0);
         }
-        if (!cookie.storage.getItem('level_2')) {
-            cookie.storage.setItem('level_2', 0);
+        if (!Cookie.getItem('level_2')) {
+            Cookie.setItem('level_2', 0);
         }
-        if (!cookie.storage.getItem('level_3')) {
-            cookie.storage.setItem('level_3', 0);
+        if (!Cookie.getItem('level_3')) {
+            Cookie.setItem('level_3', 0);
         }
-        if (!cookie.storage.getItem('level_4')) {
-            cookie.storage.setItem('level_4', 0);
+        if (!Cookie.getItem('level_4')) {
+            Cookie.setItem('level_4', 0);
         }
-        if (!cookie.storage.getItem('level_5')) {
-            cookie.storage.setItem('level_5', 0);
+        if (!Cookie.getItem('level_5')) {
+            Cookie.setItem('level_5', 0);
         }
         // レベル記憶
-        if (cookie.storage.getItem('level_save') !== undefined && cookie.storage.getItem('level_save') !== 'undefined' && cookie.storage.getItem('level_save') !== null) {
-            gameState.level = parseInt(cookie.storage.getItem('level_save'))
+        if (Cookie.getItem('level_save') !== undefined && Cookie.getItem('level_save') !== 'undefined' && Cookie.getItem('level_save') !== null) {
+            gameState.level = parseInt(Cookie.getItem('level_save'))
         } else {
-            cookie.storage.setItem('level_save', 1);
+            Cookie.setItem('level_save', 1);
             gameState.level =1
         }
     
@@ -70,7 +72,7 @@ export default class GameStateManager{
             gameState.demo =false
             gameState.auto_log=true
         }
-        gameState = GameStateManager.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState)
         return gameState
       }
 
@@ -123,18 +125,18 @@ export default class GameStateManager{
     /** 
      * メッセージを更新
      */
-     static calcWinner(_gameState:GameState,cookie:cookie):GameState{
+     static calcWinner(_gameState:GameState):GameState{
         let gameState=GameStateManager.calcScore({..._gameState});
         
         if (gameState.logArray.length === 0) {
             if (gameState.winner == 1) {
                 gameState.message = 'You win!'
-                cookie.storage.setItem('level_' + gameState.level,
-                    parseInt(cookie.storage.getItem('level_' + gameState.level)) + 1);
+                Cookie.setItem('level_' + gameState.level,
+                    parseInt(Cookie.getItem('level_' + gameState.level)) + 1);
                     gameState = GameStateManager.endgame(gameState);
             } else if (gameState.winner == -1) {
                 gameState.message ='You lose...'
-                cookie.storage.setItem('level_' + gameState.level, 0);
+                Cookie.setItem('level_' + gameState.level, 0);
                 gameState = GameStateManager.endgame(gameState);
             } else if (gameState.winner === 0) {
                 if (gameState.mapList[JSON.stringify(gameState.map)] >= Rule.LIMIT_1000DAY) {
@@ -146,8 +148,8 @@ export default class GameStateManager{
             }
         }
 
-        if (cookie.storage.getItem('level_' + gameState.level) > 0) {
-            gameState.wins = cookie.storage.getItem('level_' + gameState.level)
+        if (Cookie.getItem('level_' + gameState.level) > 0) {
+            gameState.wins = Cookie.getItem('level_' + gameState.level)
         }
         return gameState
     }
@@ -157,6 +159,80 @@ export default class GameStateManager{
         //     document.querySelector('#span_replay')?.classList.remove("hide");
         //     document.querySelector('#span_tweetlog')?.classList.remove("hide");
         // }
+        return gameState
+    }
+    static ai(_gameState:GameState):GameState{
+        let gameState=GameStateManager.calcScore({..._gameState});
+        const startTime = new Date();
+        let endTime = null;
+        // 終盤になったら長考してみる。
+        const count = Rule.getNodeCount(gameState.map) / 2;
+        let plus = 0;
+        switch (gameState.level) {
+            case 1:
+                if (count <= 7) {
+                    plus++;
+                }
+                break;
+            case 2:
+                if (count <= 8) {
+                    plus++;
+                }
+                break;
+            case 3:
+                if (count <= 10) {
+                    plus++;
+                }
+                if (count <= 6) {
+                    plus++;
+                }
+                break;
+            case 4:
+                if (count <= 11) {
+                    plus++;
+                }
+                if (count <= 7) {
+                    plus++;
+                }
+                break;
+            case 5:
+                if (count > 16) {
+                    plus--;
+                }
+                if (count <= 12) {
+                    plus++;
+                }
+                if (count <= 8) {
+                    plus++;
+                }
+                break;
+            case 6:
+                if (count > 16) {
+                    plus--;
+                }
+                if (count <= 12) {
+                    plus++;
+                }
+                if (count <= 8) {
+                    plus++;
+                }
+                break;
+        }
+
+        const _hand = Aijs.thinkAI(gameState.map, gameState.turnPlayer, gameState.level + plus + 1, undefined, undefined, undefined)[0];
+        if (_hand) {
+            const _map = gameState.map.slice()
+            _map[_hand[1]] = gameState.map[_hand[0]];
+            _map[_hand[0]] = 0;
+            gameState.map = _map
+            gameState.logArray2 = gameState.logArray2.concat([_hand[0], _hand[1]])
+        }
+        gameState.turnPlayer= (gameState.turnPlayer * -1)
+        endTime = new Date();
+        gameState.thinktime = ((endTime.getTime() - startTime.getTime()) / 1000)
+        gameState.message = ''
+        gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
+        gameState = GameStateManager.calcWinner(gameState)
         return gameState
     }
 

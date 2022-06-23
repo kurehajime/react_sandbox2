@@ -1,67 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Board from './Colamone/Board';
 import Panel from './Colamone/Panel';
 import Footer from './Colamone/Footer';
 import Header from './Colamone/Header';
 import { Rule } from '../static/Rule';
 import Cookie from '../static/Cookie';
-import { Aijs } from '../static/Ai';
 import { Util } from '../static/Util';
 import { GameState } from '../model/GameState';
-import { $GameState, $goaled } from '../GameState';
+import { $GameState } from '../GameState';
 import { useRecoilState } from 'recoil';
 import GameStateManager from '../static/GameStateManager';
 
 export default function Colamone() {
     const [originalGameState, _setGameState] = useRecoilState($GameState)
-    const [goaled, setGoaled] = useRecoilState($goaled)
-    const [cookie] = useState(new Cookie());
     let gameState = {...originalGameState};
 
     const initDom = ()=>{
         Util.zoom(); // 小さい端末でズーム
         manual(window.innerHeight < window.innerWidth);
         window.addEventListener('orientationchange', Util.zoom);
-    }
-
-    const loopDemo = ()=>{
-        if (gameState.logArray.length === 0) {
-            if (Util.isBot() == false) {
-                          // TODO : DEMOをどうにかする
-                // window.setTimeout(() => {
-                //     if (demo == true) {
-                //         this.intervalID = window.setInterval(() => { this.playDemo() }, 400);
-                //         this.playDemo();
-                //     }
-                // }, 500);
-            }
-        }
-    }
-
-    /** 
-     * Demoを再生
-     */
-    const playDemo = () => {
-        // TODO : DEMO
-        // if (this.intervalID !== null) {
-        //     if (Math.random() > 0.3) {
-        //         this.ai(2);
-        //     } else {
-        //         this.ai(1);
-        //     }
-        // }
-        // this.view.ViewState.demo_inc++;
-        // this.calcScore();
-        // this.view.flush(this.gameState, false, false);
-        // if (this.gameState.winner === 1 || this.gameState.winner === -1 || this.gameState.winner === 0) {
-        //     this.gameState.goaled = true;
-        //     this.gameState.winner = null;
-        //     this.view.flush(this.gameState, false, false);
-        //     this.shuffleBoard();
-        // }
-        // if (this.view.ViewState.demo_inc > 42) {
-        //     window.clearInterval(this.intervalID as number);
-        // }
     }
 
     /** 
@@ -91,7 +48,6 @@ export default function Colamone() {
             gameState.map = gameState.startMap
             gameState.logArray2 = []
             gameState.winner = null
-            setGoaled(false)
             gameState.turnPlayer = 1
             // TODO : DEMO
             //window.clearInterval(this.intervalID as number);
@@ -112,13 +68,6 @@ export default function Colamone() {
             }
             const canm = Rule.getCanMovePanelX(gameState.hover, gameState.map);
             if (canm.indexOf(target) >= 0) {
-                if (Rule.isGoaled(target, gameState.turnPlayer)) {
-                    setGoaled(true)
-                    setTimeout(() => {
-                        setGoaled(false)
-                    }, 2000);
-                }
-
                 const _map = gameState.map.slice()
                 _map[target] = gameState.map[gameState.hover];
                 _map[gameState.hover] = 0;
@@ -131,11 +80,11 @@ export default function Colamone() {
                 // AIが考える。
                 gameState.message = 'thinking...'
                 gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-                gameState = GameStateManager.calcWinner(gameState,cookie)
+                gameState = GameStateManager.calcWinner(gameState)
                 setGameState(gameState)
                 if (gameState.winner === null) {
                     window.setTimeout(() => {
-                        _ai(gameState.level);
+                        gameState = GameStateManager.ai(gameState);
                         setGameState(gameState)
                     }, 250);
                 } else {
@@ -151,9 +100,9 @@ export default function Colamone() {
      * ラジオボタン変更時処理
      */
     const ev_radioChange = () => {
-        cookie.storage.setItem('level_save', gameState.level);
-        if (cookie.storage.getItem('level_' + gameState.level) > 0) {
-            gameState.wins = (cookie.storage.getItem('level_' + gameState.level))
+        Cookie.setItem('level_save', gameState.level);
+        if (Cookie.getItem('level_' + gameState.level) > 0) {
+            gameState.wins = (Cookie.getItem('level_' + gameState.level))
         }
         gameState.map = Rule.copyMap(gameState.startMap)
         gameState.hand = null
@@ -162,88 +111,6 @@ export default function Colamone() {
         gameState.blueScore = 0
         gameState.redScore = 0
         setGameState(gameState)
-    }
-
-    /** 
-     * AIに考えてもらう。
-     */
-    const _ai = (level: number) => {
-        const startTime = new Date();
-        let endTime = null;
-        // 終盤になったら長考してみる。
-        const count = Rule.getNodeCount(gameState.map) / 2;
-        let plus = 0;
-        switch (level) {
-            case 1:
-                if (count <= 7) {
-                    plus++;
-                }
-                break;
-            case 2:
-                if (count <= 8) {
-                    plus++;
-                }
-                break;
-            case 3:
-                if (count <= 10) {
-                    plus++;
-                }
-                if (count <= 6) {
-                    plus++;
-                }
-                break;
-            case 4:
-                if (count <= 11) {
-                    plus++;
-                }
-                if (count <= 7) {
-                    plus++;
-                }
-                break;
-            case 5:
-                if (count > 16) {
-                    plus--;
-                }
-                if (count <= 12) {
-                    plus++;
-                }
-                if (count <= 8) {
-                    plus++;
-                }
-                break;
-            case 6:
-                if (count > 16) {
-                    plus--;
-                }
-                if (count <= 12) {
-                    plus++;
-                }
-                if (count <= 8) {
-                    plus++;
-                }
-                break;
-        }
-
-        const _hand = Aijs.thinkAI(gameState.map, gameState.turnPlayer, level + plus + 1, undefined, undefined, undefined)[0];
-        if (_hand) {
-            if (Rule.isGoaled(_hand[1], gameState.turnPlayer)) {
-                setGoaled(true)
-                setTimeout(() => {
-                    setGoaled(false)
-                }, 2000);
-            }
-            const _map = gameState.map.slice()
-            _map[_hand[1]] = gameState.map[_hand[0]];
-            _map[_hand[0]] = 0;
-            gameState.map = _map
-            gameState.logArray2 = gameState.logArray2.concat([_hand[0], _hand[1]])
-        }
-        gameState.turnPlayer= (gameState.turnPlayer * -1)
-        endTime = new Date();
-        gameState.thinktime = ((endTime.getTime() - startTime.getTime()) / 1000)
-        gameState.message = ''
-        gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = GameStateManager.calcWinner(gameState,cookie)
     }
 
 
@@ -256,8 +123,7 @@ export default function Colamone() {
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.winner = null
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = GameStateManager.calcWinner(gameState,cookie)
-        setGoaled(false)
+        gameState = GameStateManager.calcWinner(gameState)
         setGameState(gameState)
     }
 
@@ -270,9 +136,8 @@ export default function Colamone() {
         gameState.logPointer = gameState.logPointer - 1
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.winner = null
-        setGoaled(false)
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = GameStateManager.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState)
         setGameState(gameState)
     }
 
@@ -284,7 +149,7 @@ export default function Colamone() {
         gameState.logPointer = (gameState.logPointer + 1)
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = GameStateManager.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState)
         setGameState(gameState)
     }
 
@@ -296,7 +161,7 @@ export default function Colamone() {
         gameState.auto_log = false
         gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState = GameStateManager.calcWinner(gameState,cookie)
+        gameState = GameStateManager.calcWinner(gameState)
         setGameState(gameState)
     }
 
@@ -347,9 +212,8 @@ export default function Colamone() {
     //------------------------------------
 
     useEffect(() => {
-        setGoaled(false)
         initDom()
-        gameState = GameStateManager.InitGame(gameState,cookie)
+        gameState = GameStateManager.InitGame(gameState)
         setGameState(gameState)
     }, [])
 
@@ -363,9 +227,6 @@ export default function Colamone() {
                             map={Array.from(gameState.map)}
                             hover={gameState.hover ? gameState.map[gameState.hover] : null}
                             cover={gameState.demo}
-                            score={goaled}
-                            blueScore={gameState.blueScore}
-                            redScore={gameState.redScore}
                             hand={gameState.hand}
                             message={gameState.message}
                             clickCell={(cellNumber: number) => {
@@ -374,8 +235,8 @@ export default function Colamone() {
                         ></Board>
                     </div>
                     <Panel
-                        blueScore={gameState.blueScore}
-                        redScore={gameState.redScore}
+                        blueScore={ Math.abs(gameState.blueScore)}
+                        redScore={Math.abs(gameState.redScore)}
                         level={gameState.level}
                         setLevel={
                             (x) =>{
