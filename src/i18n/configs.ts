@@ -10,6 +10,7 @@ import translation_kr from "./kr.json";
 import translation_pt from "./pt.json";
 import translation_zh_hans from "./zh-hans.json";
 import translation_zh_hant from "./zh-hant.json";
+import { Util } from "../static/Util";
 
 const resources = {
     ja: {
@@ -43,6 +44,7 @@ i18n
     .init({
         fallbackLng: 'en',
         resources,
+        lng: Util.getLang(),
         interpolation: {
             escapeValue: false
         }
