@@ -197,4 +197,45 @@ export class Util {
             );
         }
     }
+    static getLang():string{
+        const paramObj :{ [name: string]: string } = {};
+        let lang = "";
+        if (1 < document.location.search.length) {
+            var paramstr = document.location.search.substring(1).split('&');
+            for (var i = 0; i < paramstr.length; i++) {
+                var entry = paramstr[i].split('=');
+                var key = decodeURIComponent(entry[0]);
+                var value = decodeURIComponent(entry[1]);
+                paramObj[key] = decodeURIComponent(value);
+            }
+        }
+        if(paramObj["lang"]){
+            lang=paramObj["lang"];
+        }else{
+            lang=(navigator.language).toLowerCase();
+        }
+        if(lang.includes("en")){
+            return "en";
+        }
+        if(lang.includes("de")){
+            return "de";
+        }
+        if(lang.includes("ja")){
+            return "ja";
+        }
+        if(lang.includes("hi")){
+            return "hi";
+        }
+        if(lang.includes("kr")){
+            return "kr";
+        }
+        if(lang.includes("zh")){
+            if(lang.includes("hant")||lang.includes("hk")||lang.includes("tw")||lang.includes("mo")){
+                return "zhhant";
+            }
+            return "zhhans";
+        }
+    
+        return 'en';
+    }
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Mode } from "../../model/Mode"
 
 type Props = {
@@ -15,11 +16,12 @@ type Props = {
 }
 
 export default function Panel(props: Props) {
+    const { t } = useTranslation();
 
 
     return (<div id="message">
         <div id="head">
-            <span id="gamename">colamone</span> by <a href="https://twitter.com/kurehajime">@kurehajime</a><br />
+            <span id="gamename">{t('colamone')}</span> by <a href="https://twitter.com/kurehajime">@kurehajime</a><br />
             <span id="blue" className="score">{`Blue: ${props.blueScore}/8`}</span> - <span id="red" className="score">{` Red: ${props.redScore}/8`}</span><span
                 id="wins"></span>
         </div>
@@ -44,31 +46,19 @@ export default function Panel(props: Props) {
         }
         {props.mode === Mode.result &&
             <span id="span_replay">
-                <button type="button" id="replay"> View log </button>
+                <button type="button" id="replay"> {t('replay')} </button>
             </span>
         }
         {props.mode === Mode.result &&
             <span id="span_tweetlog">
-                <button type="button" id="tweetlog"> Tweet result</button>
+                <button type="button" id="tweetlog"> {t('tweetlog')}</button>
             </span>
         }
         <div id="collapsible">
-            <h5 className="howtoplay"><span id="htp">How to play Colamone</span></h5>
+            <h5 className="howtoplay"><span id="htp">{t('howtoplay')}</span></h5>
             <div className="manual">
                 <p id="manual_en" lang="en">
-                    {`(1) Colamone is similar to chess.
-But there are some differences.
-(2) Each piece can move 1 tile in the direction
-of any of it's dots.
-(3) If a piece reaches the other side,
-you get the points it's worth.
-(4) If you reach 8 points, you win.
-(5) When a piece reaches the other side, you can
-no longer move it and the enemy cannot take it.
-(6) When there's no movement available to a player,
-the player with the highest score wins.
-(7) if the current position on the board
-appeared 3 times then the result is a draw.`}</p>
+                    {t('manual')}</p>
             </div>
             <span id="sns"> <a href="https://twitter.com/share" className="twitter-share-button" data-dnt="true"
                 data-url="https://xiidec.appspot.com/colamone/colamone.html" data-hashtags="colamone, boardgames"
