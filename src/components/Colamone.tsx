@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Board from './Colamone/Board';
 import Panel from './Colamone/Panel';
 import Footer from './Colamone/Footer';
@@ -7,12 +7,38 @@ import { Rule } from '../static/Rule';
 import Cookie from '../static/Cookie';
 import { Util } from '../static/Util';
 import { GameState } from '../model/GameState';
-import { $GameState } from '../GameState';
-import { useRecoilState } from 'recoil';
 import GameStateManager from '../static/GameStateManager';
+import { Mode } from '../model/Mode';
 
 export default function Colamone() {
-    const [originalGameState, _setGameState] = useRecoilState($GameState)
+    const [originalGameState, _setGameState] = useState<GameState>({
+        turnPlayer:0,
+        map:new Int8Array([
+              -1, 0, 0, 0, 0, 6, 0, 0, 0, 0, -2, -8,
+              0, 0, 7, 5, 0, 0, 0, 0, -3, 0, 0, 0,
+              0, 4, 0, 0, 0, 0, -4, 0, 0, 0, 0,
+              3, 0, 0, 0, 0, -5, -7, 0, 0, 8, 2,
+              0, 0, 0, 0, -6, 0, 0, 0, 0, 1
+            ]),
+        startMap:new Int8Array(),
+        hover:null,
+        demo:false,
+        auto_log:false,
+        hand:null,
+        message:'',
+        blueScore:0,
+        redScore:0,
+        level:0,
+        wins:0,
+        log_pointer:0,
+        thinktime:null,
+        winner:null,
+        mapList:{},
+        mode:Mode.game,
+        logArray:[],
+        logArray2:[],
+        logPointer:0
+      })
     let gameState = {...originalGameState};
 
     const initDom = ()=>{

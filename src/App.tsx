@@ -1,5 +1,4 @@
 import './App.css';
-import { RecoilRoot } from 'recoil';
 import Colamone from './components/Colamone';
 import { useEffect } from 'react';
 import i18n from './i18n/configs';
@@ -15,9 +14,7 @@ function App() {
 
 
   return (
-    <RecoilRoot>
       <Colamone></Colamone>
-    </RecoilRoot>
   );
 }
 
