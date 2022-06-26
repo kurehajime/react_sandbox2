@@ -7,7 +7,6 @@ import Cover from "./Cover";
 import Message from "./Message";
 import { Hand } from "../../static/Rule";
 import Hover from "./Hover";
-
 type Props = {
     map: number[]
     hover: number | null
