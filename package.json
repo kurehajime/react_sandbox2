@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "node ./update-date.js && tsc --noEmit && vite build",
     "serve": "vite preview"
   },
   "eslintConfig": {
