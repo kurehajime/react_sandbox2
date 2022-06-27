@@ -68,10 +68,7 @@ export default class GameStateManager{
         gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
         Util.setTweet(); // ツイートボタンを生成
     
-        if (gameState.logArray.length !== 0) {
-            gameState.demo =false
-            gameState.auto_log=true
-        }
+
         gameState = GameStateManager.calcWinner(gameState)
         return gameState
       }

@@ -11,6 +11,7 @@ import GameStateManager from '../static/GameStateManager';
 import { Mode } from '../model/Mode';
 
 export default function Colamone() {
+    const [intervalID,setIntervalID] = useState<number>(-1);
     const [originalGameState, _setGameState] = useState<GameState>({
         turnPlayer:0,
         map:new Int8Array([
@@ -51,12 +52,15 @@ export default function Colamone() {
      * Logを再生
      */
     const playLog = () => {
-        // TODO : LOGS
-        // if (intervalID_log !== null && autoLog == true) {
-        //     move_next();
-        // } else {
-        //     clearInterval(this.intervalID_log as number);
-        // }
+        const _intervalID = window.setInterval(()=>{
+            if (gameState.auto_log == true) {
+                move_next();
+            } else {
+                gameState.auto_log = false;
+                clearInterval(intervalID);
+            }
+        }, 1500);
+        setIntervalID(_intervalID)
     }
 
     /** 
@@ -240,7 +244,14 @@ export default function Colamone() {
     useEffect(() => {
         initDom()
         gameState = GameStateManager.InitGame(gameState)
+        if(gameState.logArray.length !== 0){
+            gameState.demo =false
+            gameState.auto_log=true
+            gameState.mode=Mode.log
+            playLog()
+        }
         setGameState(gameState)
+
     }, [])
 
     return (
