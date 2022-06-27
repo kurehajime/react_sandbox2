@@ -11,6 +11,7 @@ type Props = {
     prev: () => void
     next: () => void
     nextnext: () => void
+    replay: () => void
     tweet: () => void
     mode: Mode
 }
@@ -38,20 +39,20 @@ export default function Panel(props: Props) {
         </div>
         {props.mode === Mode.log &&
             <span id="log">
-                <button type="button" id="prevprev"> |&lt; </button>
-                <button type="button" id="prev"> &lt; </button>
-                <button type="button" id="next"> &gt; </button>
-                <button type="button" id="nextnext"> &gt;|</button>
+                <button type="button" id="prevprev" onClick={props.prevprev}> |&lt; </button>
+                <button type="button" id="prev" onClick={props.prev}> &lt; </button>
+                <button type="button" id="next" onClick={props.next}> &gt; </button>
+                <button type="button" id="nextnext" onClick={props.nextnext}> &gt;|</button>
             </span>
         }
         {props.mode === Mode.result &&
             <span id="span_replay">
-                <button type="button" id="replay"> {t('replay')} </button>
+                <button type="button" id="replay" onClick={props.replay}> {t('replay')} </button>
             </span>
         }
         {props.mode === Mode.result &&
             <span id="span_tweetlog">
-                <button type="button" id="tweetlog"> {t('tweetlog')}</button>
+                <button type="button" id="tweetlog" onClick={props.tweet}> {t('tweetlog')}</button>
             </span>
         }
         <div id="collapsible">

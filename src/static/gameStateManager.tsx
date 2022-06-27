@@ -155,10 +155,8 @@ export default class GameStateManager{
     }
     static endgame(_gameState:GameState):GameState{
         const gameState={..._gameState}
-        // if (gameState.logArray.length === 0) {
-        //     document.querySelector('#span_replay')?.classList.remove("hide");
-        //     document.querySelector('#span_tweetlog')?.classList.remove("hide");
-        // }
+        gameState.mode = Mode.result
+        Util.jumpkento(gameState.startMap,gameState.logArray2,gameState.level)
         return gameState
     }
     static ai(_gameState:GameState):GameState{
@@ -225,7 +223,7 @@ export default class GameStateManager{
             _map[_hand[1]] = gameState.map[_hand[0]];
             _map[_hand[0]] = 0;
             gameState.map = _map
-            gameState.logArray2 = gameState.logArray2.concat([_hand[0], _hand[1]])
+            gameState.logArray2 = gameState.logArray2.concat([[_hand[0], _hand[1]]])
         }
         gameState.turnPlayer= (gameState.turnPlayer * -1)
         endTime = new Date();

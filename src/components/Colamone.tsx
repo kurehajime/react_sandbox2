@@ -99,7 +99,7 @@ export default function Colamone() {
                 _map[gameState.hover] = 0;
                 gameState.map = _map
                 gameState.turnPlayer = gameState.turnPlayer * -1
-                gameState.logArray2 = gameState.logArray2.concat([gameState.hover, target])
+                gameState.logArray2 = gameState.logArray2.concat([[gameState.hover, target]])
                 gameState.hand = [gameState.hover, target]
                 gameState.hover = null
 
@@ -271,12 +271,16 @@ export default function Colamone() {
                             }
                         }
                         mode={gameState.mode}
-                        newGame={() => { return }}
-                        prevprev={() => { return }}
-                        prev={() => { return }}
-                        next={() => { return }}
-                        nextnext={() => { return }}
-                        tweet={() => { return }}
+                        newGame={() => { reloadnew() }}
+                        prevprev={() => { move_start() }}
+                        prev={() => { move_prev() }}
+                        next={() => { move_next() }}
+                        nextnext={() => { move_end() }}
+                        replay={() => { 
+                            gameState.mode = Mode.log
+                            setGameState(gameState)
+                         }}
+                        tweet={() => { Util.tweetlog(gameState.startMap,gameState.logArray2,gameState.level) }}
                     ></Panel>
 
                 </div>
