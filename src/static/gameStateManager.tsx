@@ -156,7 +156,6 @@ export default class GameStateManager{
     static endgame(_gameState:GameState):GameState{
         const gameState={..._gameState}
         gameState.mode = Mode.result
-        Util.jumpkento(gameState.startMap,gameState.logArray2,gameState.level)
         return gameState
     }
     static ai(_gameState:GameState):GameState{

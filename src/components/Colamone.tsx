@@ -277,8 +277,7 @@ export default function Colamone() {
                         next={() => { move_next() }}
                         nextnext={() => { move_end() }}
                         replay={() => { 
-                            gameState.mode = Mode.log
-                            setGameState(gameState)
+                            Util.jumpkento(gameState.startMap,gameState.logArray2,gameState.level)
                          }}
                         tweet={() => { Util.tweetlog(gameState.startMap,gameState.logArray2,gameState.level) }}
                     ></Panel>

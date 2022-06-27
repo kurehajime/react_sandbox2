@@ -148,6 +148,7 @@ export class Util {
      * 検討画面に飛ぶ
      */
     static jumpkento(startMap: MapArray, logArray2: Array<Hand>, level: number) {
+        let url = document.location.href.split('?')[0];
         const init = '?init=' + startMap[55] + ',' +
             startMap[45] + ',' +
             startMap[35] + ',' +
@@ -159,7 +160,7 @@ export class Util {
         let log = '&log=' + Util.encodeLog(logArray2);
         log += '&lv=' + level;
         // 履歴エントリの追加
-        history.pushState('','',init + log);
+        location.href = url + init + log;
     }
 
     /** 
