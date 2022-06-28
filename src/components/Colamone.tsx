@@ -17,7 +17,6 @@ export default function Colamone() {
 
     const initDom = ()=>{
         Util.zoom(); // 小さい端末でズーム
-        manual(window.innerHeight < window.innerWidth);
         window.addEventListener('orientationchange', Util.zoom);
     }
 
@@ -197,13 +196,6 @@ export default function Colamone() {
         setGameState(gameState)
     }
 
-    const manual = (show: boolean) => {
-        if (show) {
-            document.querySelector('.manual')?.classList.remove("hide");
-        } else {
-            document.querySelector('.manual')?.classList.add("hide");
-        }
-    }
     /** 
      * ゲーム終了
      */
@@ -247,6 +239,11 @@ export default function Colamone() {
                         blueScore={ Math.abs(gameState.blueScore)}
                         redScore={Math.abs(gameState.redScore)}
                         level={gameState.level}
+                        manual={gameState.manual}
+                        toggleManual={() => {
+                            gameState.manual = !gameState.manual
+                            setGameState(gameState)
+                        }}
                         setLevel={
                             (x) =>{
                                 ev_radioChange(x)

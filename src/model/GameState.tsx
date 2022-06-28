@@ -31,6 +31,7 @@ export default class GameState {
     public logArray: Array<MapArray> = []
     public logArray2: Array<Hand> = []
     public logPointer: number = 0
+    public manual: boolean = false
 
     public constructor(_gameState:GameState|null){
         if(_gameState){
@@ -54,6 +55,7 @@ export default class GameState {
             this.logArray=_gameState.logArray
             this.logArray2=_gameState.logArray2
             this.logPointer=_gameState.logPointer
+            this.manual = _gameState.manual
         }
     }
 
@@ -121,6 +123,9 @@ export default class GameState {
 
         this.mapList = Rule.add1000day(this.map, this.mapList)
         Util.setTweet(); // ツイートボタンを生成
+
+
+        this.manual = window.innerHeight < window.innerWidth
 
         this.calcWinner()
     }

@@ -5,6 +5,7 @@ type Props = {
     level: number
     blueScore: number
     redScore: number
+    manual: boolean
     setLevel: (level: number) => void
     newGame: () => void
     prevprev: () => void
@@ -13,6 +14,7 @@ type Props = {
     nextnext: () => void
     replay: () => void
     tweet: () => void
+    toggleManual: () => void
     mode: Mode
 }
 
@@ -56,16 +58,18 @@ export default function Panel(props: Props) {
             </span>
         }
         <div id="collapsible">
-            <h5 className="howtoplay"><span id="htp">{t('howtoplay')}</span></h5>
-            <div className="manual">
-                <p id="manual_en" lang="en">
-                    {t('manual')}</p>
-            </div>
-            <span id="sns"> <a href="https://twitter.com/share" className="twitter-share-button" data-dnt="true"
-                data-url="https://xiidec.appspot.com/colamone/colamone.html" data-hashtags="colamone, boardgames"
-                data-lang="en" data-size="default"></a>
-            </span>
+            <h5 className="howtoplay" onClick={()=>{props.toggleManual()}}><span id="htp">{t('howtoplay')}</span></h5>
+            {props.manual &&
+                    <div className="manual">
+                     <p id="manual">{t('manual')}</p>
+                    </div>
+            }
+
         </div>
+        <span id="sns"> <a href="https://twitter.com/share" className="twitter-share-button" data-dnt="true"
+            data-url="https://xiidec.appspot.com/colamone/colamone.html" data-hashtags="colamone, boardgames"
+            data-lang="en" data-size="default"></a>
+        </span>
     </div >)
 
 }
