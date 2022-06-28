@@ -33,33 +33,33 @@ export default class GameState {
     public logPointer: number = 0
     public manual: boolean = false
 
-    public constructor(_gameState:GameState|null){
-        if(_gameState){
-            this.turnPlayer=_gameState.turnPlayer
-            this.map=_gameState.map
-            this.startMap=_gameState.startMap
-            this.hover=_gameState.hover
-            this.demo=_gameState.demo
-            this.auto_log=_gameState.auto_log
-            this.hand=_gameState.hand
-            this.message=_gameState.message
-            this.blueScore=_gameState.blueScore
-            this.redScore=_gameState.redScore
-            this.level=_gameState.level
-            this.wins=_gameState.wins
-            this.log_pointer=_gameState.log_pointer
-            this.thinktime=_gameState.thinktime
-            this.winner=_gameState.winner
-            this.mapList=_gameState.mapList
-            this.mode=_gameState.mode
-            this.logArray=_gameState.logArray
-            this.logArray2=_gameState.logArray2
-            this.logPointer=_gameState.logPointer
+    public constructor(_gameState: GameState | null) {
+        if (_gameState) {
+            this.turnPlayer = _gameState.turnPlayer
+            this.map = _gameState.map
+            this.startMap = _gameState.startMap
+            this.hover = _gameState.hover
+            this.demo = _gameState.demo
+            this.auto_log = _gameState.auto_log
+            this.hand = _gameState.hand
+            this.message = _gameState.message
+            this.blueScore = _gameState.blueScore
+            this.redScore = _gameState.redScore
+            this.level = _gameState.level
+            this.wins = _gameState.wins
+            this.log_pointer = _gameState.log_pointer
+            this.thinktime = _gameState.thinktime
+            this.winner = _gameState.winner
+            this.mapList = _gameState.mapList
+            this.mode = _gameState.mode
+            this.logArray = _gameState.logArray
+            this.logArray2 = _gameState.logArray2
+            this.logPointer = _gameState.logPointer
             this.manual = _gameState.manual
         }
     }
 
-    public clone() : GameState {
+    public clone(): GameState {
         const clone = new GameState(this)
         return clone
     }
@@ -126,7 +126,6 @@ export default class GameState {
 
 
         this.manual = window.innerHeight < window.innerWidth
-
         this.calcWinner()
     }
 
@@ -177,8 +176,8 @@ export default class GameState {
     /** 
      * メッセージを更新
      */
-     public calcWinner() {
-
+    public calcWinner() {
+        this.calcScore()
         if (this.logArray.length === 0) {
             if (this.winner == 1) {
                 this.message = 'You win!'
@@ -276,6 +275,71 @@ export default class GameState {
         endTime = new Date();
         this.thinktime = ((endTime.getTime() - startTime.getTime()) / 1000)
         this.message = ''
+        this.mapList = Rule.add1000day(this.map, this.mapList)
+        this.calcWinner()
+    }
+
+    /** 
+    * ラジオボタン変更時処理
+    */
+    public changeLevel(level: number) {
+        this.level = level
+        Cookie.setItem('level_save', this.level);
+        if (Cookie.getItem('level_' + this.level) > 0) {
+            this.wins = (Cookie.getItem('level_' + this.level))
+        }
+        this.map = Rule.copyMap(this.startMap)
+        this.hand = null
+        this.mapList = {};
+        this.logArray2 = [];
+        this.blueScore = 0
+        this.redScore = 0
+    }
+
+
+    /** 
+     * ログを全部巻き戻す
+     */
+    public move_start() {
+        this.logPointer = 0
+        this.auto_log = false
+        this.map = Rule.copyMap(this.logArray[this.logPointer])
+        this.winner = null
+        this.mapList = Rule.add1000day(this.map, this.mapList)
+        this.calcWinner()
+    }
+
+    /** 
+     * ログを戻す
+     */
+    public move_prev() {
+        if (this.logPointer <= 0) { return; }
+        this.auto_log = false
+        this.logPointer = this.logPointer - 1
+        this.map = Rule.copyMap(this.logArray[this.logPointer])
+        this.winner = null
+        this.mapList = Rule.add1000day(this.map, this.mapList)
+        this.calcWinner()
+    }
+
+    /** 
+     * ログを進める
+     */
+    public move_next() {
+        if (this.logPointer + 1 > this.logArray.length - 1) { return; }
+        this.logPointer = (this.logPointer + 1)
+        this.map = Rule.copyMap(this.logArray[this.logPointer])
+        this.mapList = Rule.add1000day(this.map, this.mapList)
+        this.calcWinner()
+    }
+
+    /** 
+     * ログを最後まで進める。
+     */
+    public move_end = () => {
+        this.logPointer = (this.logArray.length - 1)
+        this.auto_log = false
+        this.map = Rule.copyMap(this.logArray[this.logPointer])
         this.mapList = Rule.add1000day(this.map, this.mapList)
         this.calcWinner()
     }

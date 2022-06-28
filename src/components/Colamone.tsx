@@ -4,18 +4,17 @@ import Panel from './Colamone/Panel';
 import Footer from './Colamone/Footer';
 import Header from './Colamone/Header';
 import { Rule } from '../static/Rule';
-import Cookie from '../static/Cookie';
 import { Util } from '../static/Util';
 import { Mode } from '../model/Mode';
 import GameState from '../model/GameState';
 
 export default function Colamone() {
-    const [intervalID,setIntervalID] = useState<number>(-1);
+    const [intervalID, setIntervalID] = useState<number>(-1);
     const [originalGameState, _setGameState] = useState<GameState>(new GameState(null))
     let gameState = originalGameState.clone();
 
 
-    const initDom = ()=>{
+    const initDom = () => {
         Util.zoom(); // 小さい端末でズーム
         window.addEventListener('orientationchange', Util.zoom);
     }
@@ -24,12 +23,14 @@ export default function Colamone() {
      * Logを再生
      */
     const playLog = () => {
-        const _intervalID = window.setInterval(()=>{
+        const _intervalID = window.setInterval(() => {
             if (gameState.auto_log == true) {
-                move_next();
+                gameState.move_next();
+                setGameState(gameState)
             } else {
                 gameState.auto_log = false;
                 clearInterval(intervalID);
+                setGameState(gameState)
             }
         }, 1500);
         setIntervalID(_intervalID)
@@ -79,7 +80,7 @@ export default function Colamone() {
 
                 // AIが考える。
                 gameState.message = 'thinking...'
-                gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
+                gameState.mapList = Rule.add1000day(gameState.map, gameState.mapList)
                 gameState.calcWinner()
                 setGameState(gameState)
                 if (gameState.winner === null) {
@@ -94,76 +95,6 @@ export default function Colamone() {
         }
 
         return true;
-    }
-
-    /** 
-     * ラジオボタン変更時処理
-     */
-    const ev_radioChange = (level:number) => {
-        gameState.level = level
-        Cookie.setItem('level_save', gameState.level);
-        if (Cookie.getItem('level_' + gameState.level) > 0) {
-            gameState.wins = (Cookie.getItem('level_' + gameState.level))
-        }
-        gameState.map = Rule.copyMap(gameState.startMap)
-        gameState.hand = null
-        gameState.mapList = {};
-        gameState.logArray2  = [];
-        gameState.blueScore = 0
-        gameState.redScore = 0
-        setGameState(gameState)
-    }
-
-
-    /** 
-     * ログを全部巻き戻す
-     */
-    const move_start = () => {
-        gameState.logPointer = 0
-        gameState.auto_log = false
-        gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
-        gameState.winner = null
-        gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState.calcWinner()
-        setGameState(gameState)
-    }
-
-    /** 
-     * ログを戻す
-     */
-    const move_prev = () => {
-        if (gameState.logPointer <= 0) { return; }
-        gameState.auto_log = false
-        gameState.logPointer = gameState.logPointer - 1
-        gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
-        gameState.winner = null
-        gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState.calcWinner()
-        setGameState(gameState)
-    }
-
-    /** 
-     * ログを進める
-     */
-    const move_next = () => {
-        if (gameState.logPointer + 1 > gameState.logArray.length - 1) { return; }
-        gameState.logPointer = (gameState.logPointer + 1)
-        gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
-        gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState.calcWinner()
-        setGameState(gameState)
-    }
-
-    /** 
-     * ログを最後まで進める。
-     */
-    const move_end = () => {
-        gameState.logPointer =(gameState.logArray.length - 1)
-        gameState.auto_log = false
-        gameState.map = Rule.copyMap(gameState.logArray[gameState.logPointer])
-        gameState.mapList = Rule.add1000day(gameState.map,gameState.mapList)
-        gameState.calcWinner()
-        setGameState(gameState)
     }
 
     /** 
@@ -199,7 +130,7 @@ export default function Colamone() {
     /** 
      * ゲーム終了
      */
-    const  setGameState= (gs:GameState)=>{
+    const setGameState = (gs: GameState) => {
         _setGameState(gs.clone())
     }
 
@@ -208,10 +139,10 @@ export default function Colamone() {
     useEffect(() => {
         initDom()
         gameState.initGame()
-        if(gameState.logArray.length !== 0){
-            gameState.demo =false
-            gameState.auto_log=true
-            gameState.mode=Mode.log
+        if (gameState.logArray.length !== 0) {
+            gameState.demo = false
+            gameState.auto_log = true
+            gameState.mode = Mode.log
             playLog()
         }
         setGameState(gameState)
@@ -236,7 +167,7 @@ export default function Colamone() {
                         ></Board>
                     </div>
                     <Panel
-                        blueScore={ Math.abs(gameState.blueScore)}
+                        blueScore={Math.abs(gameState.blueScore)}
                         redScore={Math.abs(gameState.redScore)}
                         level={gameState.level}
                         manual={gameState.manual}
@@ -245,20 +176,33 @@ export default function Colamone() {
                             setGameState(gameState)
                         }}
                         setLevel={
-                            (x) =>{
-                                ev_radioChange(x)
+                            (x) => {
+                                gameState.changeLevel(x)
+                                setGameState(gameState)
                             }
                         }
                         mode={gameState.mode}
                         newGame={() => { reloadnew() }}
-                        prevprev={() => { move_start() }}
-                        prev={() => { move_prev() }}
-                        next={() => { move_next() }}
-                        nextnext={() => { move_end() }}
-                        replay={() => { 
-                            Util.jumpkento(gameState.startMap,gameState.logArray2,gameState.level)
-                         }}
-                        tweet={() => { Util.tweetlog(gameState.startMap,gameState.logArray2,gameState.level) }}
+                        prevprev={() => {
+                            gameState.move_start()
+                            setGameState(gameState)
+                        }}
+                        prev={() => {
+                            gameState.move_prev()
+                            setGameState(gameState)
+                        }}
+                        next={() => {
+                            gameState.move_next()
+                            setGameState(gameState)
+                        }}
+                        nextnext={() => {
+                            gameState.move_end()
+                            setGameState(gameState)
+                        }}
+                        replay={() => {
+                            Util.jumpkento(gameState.startMap, gameState.logArray2, gameState.level)
+                        }}
+                        tweet={() => { Util.tweetlog(gameState.startMap, gameState.logArray2, gameState.level) }}
                     ></Panel>
 
                 </div>
