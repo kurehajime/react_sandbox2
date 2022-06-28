@@ -214,9 +214,6 @@ export default class GameState {
         let plus = 0;
         switch (this.level) {
             case 1:
-                if (count <= 7) {
-                    plus++;
-                }
                 break;
             case 2:
                 if (count <= 8) {
